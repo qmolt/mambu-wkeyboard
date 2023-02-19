@@ -22,7 +22,8 @@ let bb; //short side
 let screenFont;
 let fontReady = false;
 let mambuIcon;
-const mambuAa = 70;
+let wkeyImg;
+let mambuAa;
 
 //DOM---------------------------------------------------------------------------
 function k0selectEvent(){
@@ -109,6 +110,7 @@ function preload(){
 	screenFont = loadFont('assets/Gest-Regular.otf', fontRead);
 
 	mambuIcon = loadImage('assets/icon.png');
+	wkeyImg = loadImage('assets/wkeyboard.png');
 }
 
 function setup(){
@@ -162,24 +164,26 @@ function draw(){
 
 	//draw wkeyboard
 	if(wKey.dated){
+		mambuAa = 0.1*bb;
+
 		background(51);
-		
+
 		push();
 		rotate(ori_angle);
 		noStroke();
 		fill(31);
-		rect(0, 0, aa, 40)
-		image(mambuIcon, 0.0625*bb-0.5*mambuAa, 0.125*bb-0.5*mambuAa, mambuAa, mambuAa); 
+		rect(0, 0, aa, 40);
+		image(mambuIcon, 0.025*bb, 0.075*bb, mambuAa, mambuAa); 
+		image(wkeyImg, 0.12*bb, 0.075*bb, 2*mambuAa, mambuAa)
 		pop();
 
-		//text settings
-		textAlign(CENTER);
-		textSize(30);
-		noStroke();
-		fill(200);
-		if(fontReady == 'false'){textFont('Helvetica');}
-		textFont(screenFont);
-		text('wKeyboard', 0.12*bb+mambuAa, 0.125*bb+0.25*mambuAa);
+		//textAlign(CENTER);
+		//textSize(30);
+		//noStroke();
+		//fill(200);
+		//if(fontReady == 'false'){textFont('Helvetica');}
+		//textFont(screenFont);
+		//text('wKeyboard', 0.23*bb, 0.125*bb+0.25*mambuAa);
 
 		wKey.setSize(20, 0.25*bb, aa-40, 0.5*bb, ori);
 		wKey.drawKeyboard();
