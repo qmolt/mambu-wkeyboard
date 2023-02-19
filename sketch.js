@@ -107,8 +107,6 @@ function preload(){
 		{"oct_div": 65, "struc": [0, 11, 22, 33, 44, 55]}
 	];
 
-	screenFont = loadFont('assets/Gest-Regular.otf', fontRead);
-
 	mambuIcon = loadImage('assets/icon.png');
 	wkeyImg = loadImage('assets/wkeyboard.png');
 }
