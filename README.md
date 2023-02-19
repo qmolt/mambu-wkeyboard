@@ -1,10 +1,12 @@
+[Readme in english](https://github.com/qumolt/mambu-wkeyboard/blob/master/README_EN.md)
+
 # Acerca de
 
 __Mambú wKeyboard__ es un teclado que interpreta diferentes afinaciones y divisiones de octava. Las escalas representadas son escalas _r_-cohemitonicas originadas por intervalos totativos, siendo _'r'_ la restricción de notas consecutivas posibles en el ancho de banda crítico desde 1kHz.
 Esta aplicación está escrita en Javascript, hecha con [P5.js](https://p5js.org/es/) y [Tone.js](https://tonejs.github.io/).
 La fuente utilizada es [Gest](https://github.com/laictype/Gest_Open)
 
---
+---
 
 # Notas
 

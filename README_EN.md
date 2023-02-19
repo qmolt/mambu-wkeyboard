@@ -4,7 +4,7 @@ __Mambú wKeyboard__ is a keyboard that can play several tunings and divisions o
 This app is written with Javascript, made with [P5.js](https://p5js.org/) and [Tone.js](https://tonejs.github.io/).
 The text font used is [Gest](https://github.com/laictype/Gest_Open)
 
---
+---
 
 # Notes
 
