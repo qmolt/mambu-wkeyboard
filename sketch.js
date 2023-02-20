@@ -132,7 +132,7 @@ function setup(){
 	wKey = new wKeyboard(scales[8]);
 	//select scale menu
 	k0sel = createSelect();
-	k0sel.position(120, 10);
+	k0sel.position(bb*0.25, 10);
 	for(let i=0; i<scales.length; i++){
 	k0sel.option(`${scales[i].oct_div} | ${scales[i].struc.length}`, i);
 	}
@@ -140,16 +140,16 @@ function setup(){
 	k0sel.changed(k0selectEvent);
 	//buttons
 	k0boct_d = createButton('-1 oct');
-	k0boct_d.position(300, 10);
+	k0boct_d.position(bb*0.5, 10);
 	k0boct_d.mousePressed(k0OctDown);
 	k0boct_u = createButton('+1 oct');
-	k0boct_u.position(350, 10);
+	k0boct_u.position(bb*0.5+50, 10);
 	k0boct_u.mousePressed(k0OctUp);
 	k0btrn_d = createButton('← oct');
-	k0btrn_d.position(500, 10);
+	k0btrn_d.position(bb*0.75, 10);
 	k0btrn_d.mousePressed(k0TrnDown);
 	k0btrn_u = createButton('→ oct');
-	k0btrn_u.position(550, 10);
+	k0btrn_u.position(bb*0.75+50, 10);
 	k0btrn_u.mousePressed(k0TrnUp);
 	
 	//audio---------------------------------------
