@@ -48,7 +48,6 @@ function windowResized() {
 	wKey.dated = true;
 }
 function orientationCorrection() {
-	let isSame = (deviceOrientation === ori)?true:false;
 	if(deviceOrientation === 'portrait'){
 	//if(true){ //debug
 		translate(width, 0);
@@ -63,7 +62,6 @@ function orientationCorrection() {
 		bb = height;
 		ori = 'landscape';
 	}
-	return isSame;
 }
 function fontRead(){
     fontReady = true;
@@ -126,6 +124,7 @@ function setup(){
 	//DOM
 	fscreenb = createButton('□');
   	fscreenb.position(10, 10);
+  	fscreenb.size(bb*0.025, bb*0.025);
   	fscreenb.mousePressed(fullscreenEvent);
 
 	//keyboard 1----------------------------------
@@ -133,6 +132,7 @@ function setup(){
 	//select scale menu
 	k0sel = createSelect();
 	k0sel.position(bb*0.25, 10);
+	k0sel.size(bb*0.075, bb*0.025);
 	for(let i=0; i<scales.length; i++){
 	k0sel.option(`${scales[i].oct_div} | ${scales[i].struc.length}`, i);
 	}
@@ -141,15 +141,22 @@ function setup(){
 	//buttons
 	k0boct_d = createButton('-1');
 	k0boct_d.position(bb*0.5, 10);
+	k0boct_d.size(bb*0.03, bb*0.025);
 	k0boct_d.mousePressed(k0OctDown);
+
 	k0boct_u = createButton('+1');
-	k0boct_u.position(bb*0.5+50, 10);
+	k0boct_u.position(bb*0.5+30, 10);
+	k0boct_u.size(bb*0.03, bb*0.025);
 	k0boct_u.mousePressed(k0OctUp);
+
 	k0btrn_d = createButton('←');
 	k0btrn_d.position(bb*0.75, 10);
+	k0btrn_d.size(bb*0.03, bb*0.025);
 	k0btrn_d.mousePressed(k0TrnDown);
+
 	k0btrn_u = createButton('→');
-	k0btrn_u.position(bb*0.75+50, 10);
+	k0btrn_u.position(bb*0.75+30, 10);
+	k0btrn_u.size(bb*0.03, bb*0.025);
 	k0btrn_u.mousePressed(k0TrnUp);
 	
 	//audio---------------------------------------
@@ -157,20 +164,33 @@ function setup(){
 	
 }
 function draw(){
-	if(windowWidth != width && windowHeight != height){windowResized();}
+	if(windowWidth != width && windowHeight != height){
+		windowResized();
+		
+		k0sel.position(bb*0.25, 10);
+		k0sel.size(bb*0.075, bb*0.025);
+		k0boct_d.position(bb*0.5, 10);
+		k0boct_d.size(bb*0.03, bb*0.025);
+		k0boct_u.position(bb*0.5+30, 10);
+		k0boct_u.size(bb*0.03, bb*0.025);
+		k0btrn_d.position(bb*0.75, 10);
+		k0btrn_d.size(bb*0.03, bb*0.025);
+		k0btrn_u.position(bb*0.75+30, 10);
+		k0btrn_u.size(bb*0.03, bb*0.025);
+	}
 	orientationCorrection();
 
 	//draw wkeyboard
 	if(wKey.dated){
 		mambuAa = 0.1*bb;
 
-		background(51);
+		background(51);			
 
 		push();
 		rotate(ori_angle);
 		noStroke();
 		fill(31);
-		rect(0, 0, aa, 40);
+		rect(0, 0, aa, bb*0.05);
 		image(mambuIcon, 0.025*bb, 0.075*bb, mambuAa, mambuAa); 
 		image(wkeyImg, 0.12*bb, 0.075*bb, 2*mambuAa, mambuAa)
 		pop();
