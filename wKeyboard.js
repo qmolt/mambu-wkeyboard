@@ -1,5 +1,5 @@
 class wKeyboard {
-	constructor(scale) {
+	constructor(octDiv, struc) {
 		
 		//size
 		this.x0 = 0;
@@ -12,12 +12,10 @@ class wKeyboard {
 		//ui
 		this.n_oct = 3;
 		this.c4oct = 1;
-		this.dated = true;
 		//notes
-		this.scale = scale;
-		this.oct_div = scale.oct_div;
-		this.struc = scale.struc;
-		this.n_tonic = scale.struc.length;
+		this.oct_div = octDiv;
+		this.struc = struc;
+		this.n_tonic = struc.length;
 		this.t_notes = this.n_oct * this.oct_div + 1;
 		//ui
 		this.note_w = this.w / this.t_notes;
@@ -26,27 +24,25 @@ class wKeyboard {
 
 	OctaveDown() {
 		this.n_oct = max(1, this.n_oct-1); 
-		this.t_notes = this.n_oct * this.oct_div + 1;
-		this.note_w = this.w / this.t_notes;
-		this.note_h = this.h;
-		this.dated = true;
+		this.updateKeySize();
 	}
 	OctaveUp() {
 		this.n_oct = max(1, this.n_oct+1); 
-		this.t_notes = this.n_oct * this.oct_div + 1;
-		this.note_w = this.w / this.t_notes;
-		this.note_h = this.h;
-		this.dated = true;
+		this.updateKeySize();
 	}
 	TranspDown() {
 		this.c4oct = this.c4oct+1;
-		this.dated = true;
 	}
 	TranspUp() {
 		this.c4oct = this.c4oct-1;
-		this.dated = true;
 	}
-
+	changeScale(octDiv, struc){
+		this.oct_div = octDiv;
+		this.struc = [];
+		this.struc = struc;
+		this.n_tonic = struc.length;
+		this.updateKeySize();
+	}
 	setSize(x0, y0, w0, h0, orientation = 'landscape'){
 		this.x0 = x0;
 		this.y0 = y0;
@@ -54,9 +50,12 @@ class wKeyboard {
 		this.h = h0;
 		this.ori = orientation;
 		this.ori_angle = (ori === 'portrait')?HALF_PI:0;
+		this.updateKeySize();
+	}
+	updateKeySize(){
 		this.t_notes = this.n_oct * this.oct_div + 1;
-		this.note_w = w0 / this.t_notes;
-		this.note_h = h0;
+		this.note_w = this.w / this.t_notes;
+		this.note_h = this.h;
 	}
 	drawKey(noteIdx, keyIdx){
 		stroke(125);
@@ -66,8 +65,8 @@ class wKeyboard {
 			let note = keyIdx % this.oct_div;
 			let idx_prev = zMod(noteIdx-1, this.n_tonic);
 			let idx_next = zMod(noteIdx+1, this.n_tonic);
-			let note_prev = this.scale.struc[idx_prev];
-			let note_next = this.scale.struc[idx_next];
+			let note_prev = this.struc[idx_prev];
+			let note_next = this.struc[idx_next];
 
 			let posx = this.x0 + this.note_w * keyIdx;
 			let posy = this.y0;
@@ -137,19 +136,18 @@ class wKeyboard {
 
 		for(let i=0; i<this.t_notes; i++){
 			let note = i % this.oct_div;
-			let idx = this.scale.struc.indexOf(note);
+			let idx = this.struc.indexOf(note);
 
 			if(idx<0){fill(31);}
 			else{fill(225);}
 
 			this.drawKey(idx, i);
 		}
-		this.dated = false;
 	}
 
 	drawPressedNote(sel_key) {
 		let note = sel_key % this.oct_div;
-		let idx = this.scale.struc.indexOf(note);
+		let idx = this.struc.indexOf(note);
 
 		noStroke();
 		fill(127);
@@ -170,17 +168,17 @@ class wKeyboard {
 
 			if(sel_notey == 1){ //down
 				let note = zMod(sel_notex, this.oct_div);
-				let idx = this.scale.struc.indexOf(note);
+				let idx = this.struc.indexOf(note);
 
 				if(idx >= 0){ //white
 					overKey = sel_notex; 
 				}else{ //down
 
-					let note_next = this.scale.struc.find(val => val > note);
+					let note_next = this.struc.find(val => val > note);
 					if(note_next == null){ note_next = 0; }
-					let idx_next = this.scale.struc.indexOf(note_next);
+					let idx_next = this.struc.indexOf(note_next);
 					let idx_prev = zMod(idx_next-1, this.n_tonic);
-					let note_prev = this.scale.struc[idx_prev];
+					let note_prev = this.struc[idx_prev];
 
 					let count_prev = zMod(note-note_prev, this.oct_div); 
 					let count_next = zMod(note_next-note, this.oct_div); 

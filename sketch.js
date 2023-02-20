@@ -1,5 +1,7 @@
 let cnv0;
 let scales;	
+let idxScale = 8;
+let dated = true;
 
 //touches/audio
 let mouseAdded = false;
@@ -25,27 +27,43 @@ let mambuIcon;
 let wkeyImg;
 let mambuAa;
 
-//DOM---------------------------------------------------------------------------
-function k0selectEvent(){
-	wKey.scale = scales[k0sel.value()];
-	wKey.oct_div = wKey.scale.oct_div;
-	wKey.struc = wKey.scale.struc;
-	wKey.n_tonic = wKey.scale.struc.length;
-	wKey.dated = true;
+//------------------------------------------------------------------------------
+function k0selectPrev(){
+	idxScale = max(0, idxScale-1);
+	wKey.changeScale(scales[idxScale].oct_div, scales[idxScale].struc);
+	dated = true;
 }
-function k0OctDown(){wKey.OctaveDown();}
-function k0OctUp(){wKey.OctaveUp();}
-function k0TrnDown(){ wKey.TranspDown();}
-function k0TrnUp(){wKey.TranspUp();}
+function k0selectNext(){
+	idxScale = min(scales.length-1, idxScale+1);
+	wKey.changeScale(scales[idxScale].oct_div, scales[idxScale].struc);
+	dated = true;
+}
+function k0OctDown(){
+	wKey.OctaveDown();
+	dated = true;
+}
+function k0OctUp(){
+	wKey.OctaveUp();
+	dated = true;
+}
+function k0TrnDown(){ 
+	wKey.TranspDown();
+	dated = true;
+}
+function k0TrnUp(){
+	wKey.TranspUp();
+	dated = true;
+}
 
 //screen
 function fullscreenEvent() {
 	let fs = fullscreen();
     fullscreen(!fs);
+    dated = true;
 }
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
-	wKey.dated = true;
+	dated = true;
 }
 function orientationCorrection() {
 	if(deviceOrientation === 'portrait'){
@@ -121,92 +139,39 @@ function setup(){
 	orientationCorrection();
 	imageMode(CORNER);
 
-	//DOM
-	fscreenb = createButton('□');
-  	fscreenb.position(10, 10);
-  	fscreenb.size(bb*0.025, bb*0.025);
-  	fscreenb.mousePressed(fullscreenEvent);
-
 	//keyboard 1----------------------------------
-	wKey = new wKeyboard(scales[8]);
-	//select scale menu
-	k0sel = createSelect();
-	k0sel.position(bb*0.25, 10);
-	k0sel.size(bb*0.075, bb*0.025);
-	for(let i=0; i<scales.length; i++){
-	k0sel.option(`${scales[i].oct_div} | ${scales[i].struc.length}`, i);
-	}
-	k0sel.selected(8);
-	k0sel.changed(k0selectEvent);
-	//buttons
-	k0boct_d = createButton('-1');
-	k0boct_d.position(bb*0.5, 10);
-	k0boct_d.size(bb*0.03, bb*0.025);
-	k0boct_d.mousePressed(k0OctDown);
-
-	k0boct_u = createButton('+1');
-	k0boct_u.position(bb*0.5+30, 10);
-	k0boct_u.size(bb*0.03, bb*0.025);
-	k0boct_u.mousePressed(k0OctUp);
-
-	k0btrn_d = createButton('←');
-	k0btrn_d.position(bb*0.75, 10);
-	k0btrn_d.size(bb*0.03, bb*0.025);
-	k0btrn_d.mousePressed(k0TrnDown);
-
-	k0btrn_u = createButton('→');
-	k0btrn_u.position(bb*0.75+30, 10);
-	k0btrn_u.size(bb*0.03, bb*0.025);
-	k0btrn_u.mousePressed(k0TrnUp);
+	wKey = new wKeyboard(scales[idxScale].oct_div, scales[idxScale].struc);
 	
 	//audio---------------------------------------
 	polySynth = new polyVoices(10);
 	
 }
 function draw(){
-	if(windowWidth != width && windowHeight != height){
-		windowResized();
-		
-		k0sel.position(bb*0.25, 10);
-		k0sel.size(bb*0.075, bb*0.025);
-		k0boct_d.position(bb*0.5, 10);
-		k0boct_d.size(bb*0.03, bb*0.025);
-		k0boct_u.position(bb*0.5+30, 10);
-		k0boct_u.size(bb*0.03, bb*0.025);
-		k0btrn_d.position(bb*0.75, 10);
-		k0btrn_d.size(bb*0.03, bb*0.025);
-		k0btrn_u.position(bb*0.75+30, 10);
-		k0btrn_u.size(bb*0.03, bb*0.025);
-	}
+	if(windowWidth != width && windowHeight != height){windowResized();}
 	orientationCorrection();
-
-	//draw wkeyboard
-	if(wKey.dated){
+	
+	if(dated){
 		mambuAa = 0.1*bb;
 
 		background(51);			
 
+		//draw menu
+		drawMenu();	
+
+		//draw logo
 		push();
 		rotate(ori_angle);
-		noStroke();
-		fill(31);
-		rect(0, 0, aa, bb*0.05);
 		image(mambuIcon, 0.025*bb, 0.075*bb, mambuAa, mambuAa); 
-		image(wkeyImg, 0.12*bb, 0.075*bb, 2*mambuAa, mambuAa)
+		image(wkeyImg, 0.12*bb, 0.075*bb, 2*mambuAa, mambuAa);
 		pop();
 
-		//textAlign(CENTER);
-		//textSize(30);
-		//noStroke();
-		//fill(200);
-		//if(fontReady == 'false'){textFont('Helvetica');}
-		//textFont(screenFont);
-		//text('wKeyboard', 0.23*bb, 0.125*bb+0.25*mambuAa);
-
+		//draw wkeyboard
 		wKey.setSize(20, 0.25*bb, aa-40, 0.5*bb, ori);
 		wKey.drawKeyboard();
-	}
 
+		dated = false;
+	}
+	
 	//add mouse
 	if(mouseAdded){
 		let idxT = touches.findIndex(o  => o.id == 99);
@@ -261,7 +226,7 @@ function draw(){
 					pTouchesId.push(polySynth.poly[idxS].id);
 					//draw
 					wKey.drawPressedNote(key_pressed);
-					wKey.dated = true;
+					dated = true;
 				}
 			}
 			else{
@@ -269,11 +234,47 @@ function draw(){
 					pTouchesId.push(polySynth.poly[idxS].id);
 					//draw
 					wKey.drawPressedNote(key_pressed);
-					wKey.dated = true;
+					dated = true;
 				}
 			}
 		}
 	}	
+}
+
+function drawMenu(){
+
+	push();
+	rotate(ori_angle);
+	rectMode(CORNER);
+	noStroke();
+	
+	fill(31);
+	rect(0, 0, aa, bb*0.05);
+		
+	fill(210);
+ 	rect(10, 10, bb*0.025, bb*0.025);
+	rect(bb*0.25, 10, bb*0.075, bb*0.025);
+	rect(bb*0.5, 10, bb*0.03, bb*0.025);
+	rect(bb*0.5+30, 10, bb*0.03, bb*0.025);
+	rect(bb*0.75, 10, bb*0.03, bb*0.025);
+	rect(bb*0.75+30, 10, bb*0.03, bb*0.025);
+
+	textAlign(CENTER, CENTER);
+	textSize(0.02*bb);
+	noStroke();
+	fill(40);
+	textFont('Helvetica');
+	text('□', 10, 10, bb*0.025, bb*0.025);
+	text(`${scales[idxScale].oct_div} | ${scales[idxScale].struc.length}`, bb*0.25, 10, bb*0.075, bb*0.025);
+	text('-', bb*0.5, 10, bb*0.03, bb*0.025);
+	text('+', bb*0.5+30, 10, bb*0.03, bb*0.025);
+	text('←', bb*0.75, 10, bb*0.03, bb*0.025);
+	text('→', bb*0.75+30, 10, bb*0.03, bb*0.025);
+
+	fill(210);
+	text('<', bb*0.2, 10, bb*0.075, bb*0.025);
+	text('>', bb*0.3, 10, bb*0.075, bb*0.025);
+	pop();
 }
 
 function playState(){
@@ -284,6 +285,17 @@ function playState(){
 }
 function mousePressed(){
 	mouseAdded = true;
+
+	if(mouseX > 10 && mouseX < bb*0.025+10 && mouseY > 10 && mouseY < bb*0.025+10){fullscreenEvent();}
+
+	if(mouseX > bb*0.2 && mouseX < bb*0.275 && mouseY > 10 && mouseY < bb*0.025+10){k0selectPrev();}
+	if(mouseX > bb*0.3 && mouseX < bb*0.375 && mouseY > 10 && mouseY < bb*0.025+10){k0selectNext();}
+
+	if(mouseX > bb*0.5 && mouseX < bb*0.53 && mouseY > 10 && mouseY < bb*0.025+10){k0OctDown();}
+	if(mouseX > bb*0.5+30 && mouseX < bb*0.53+30 && mouseY > 10 && mouseY < bb*0.025+10){k0OctUp();}
+
+	if(mouseX > bb*0.75 && mouseX < bb*0.78 && mouseY > 10 && mouseY < bb*0.025+10){k0TrnDown();}
+	if(mouseX > bb*0.75+30 && mouseX < bb*0.78+30 && mouseY > 10 && mouseY < bb*0.025+10){k0TrnUp();}
 }
 function mouseReleased(){
 	mouseAdded = false;
