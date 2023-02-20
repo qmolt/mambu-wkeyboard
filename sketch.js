@@ -252,28 +252,28 @@ function drawMenu(){
 	rect(0, 0, aa, bb*0.05);
 		
 	fill(210);
- 	rect(10, 10, bb*0.025, bb*0.025);
-	rect(bb*0.25, 10, bb*0.075, bb*0.025);
-	rect(bb*0.5, 10, bb*0.03, bb*0.025);
-	rect(bb*0.5+30, 10, bb*0.03, bb*0.025);
-	rect(bb*0.75, 10, bb*0.03, bb*0.025);
-	rect(bb*0.75+30, 10, bb*0.03, bb*0.025);
+ 	rect(bb*0.0125, bb*0.0125, bb*0.025, bb*0.025);
+	rect(bb*0.25, bb*0.0125, bb*0.075, bb*0.025);
+	rect(bb*0.5, bb*0.0125, bb*0.03, bb*0.025);
+	rect(bb*0.5+30, bb*0.0125, bb*0.03, bb*0.025);
+	rect(bb*0.75, bb*0.0125, bb*0.03, bb*0.025);
+	rect(bb*0.75+30, bb*0.0125, bb*0.03, bb*0.025);
 
 	textAlign(CENTER, CENTER);
 	textSize(0.02*bb);
 	noStroke();
 	fill(40);
 	textFont('Helvetica');
-	text('□', 10, 10, bb*0.025, bb*0.025);
+	text('□', bb*0.0125, bb*0.0125, bb*0.025, bb*0.025);
 	text(`${scales[idxScale].oct_div} | ${scales[idxScale].struc.length}`, bb*0.25, 10, bb*0.075, bb*0.025);
-	text('-', bb*0.5, 10, bb*0.03, bb*0.025);
-	text('+', bb*0.5+30, 10, bb*0.03, bb*0.025);
-	text('←', bb*0.75, 10, bb*0.03, bb*0.025);
-	text('→', bb*0.75+30, 10, bb*0.03, bb*0.025);
+	text('-', bb*0.5, bb*0.0125, bb*0.03, bb*0.025);
+	text('+', bb*0.5+30, bb*0.0125, bb*0.03, bb*0.025);
+	text('←', bb*0.75, bb*0.0125, bb*0.03, bb*0.025);
+	text('→', bb*0.75+30, bb*0.0125, bb*0.03, bb*0.025);
 
 	fill(210);
-	text('<', bb*0.2, 10, bb*0.075, bb*0.025);
-	text('>', bb*0.3, 10, bb*0.075, bb*0.025);
+	text('<', bb*0.2, bb*0.0125, bb*0.075, bb*0.025);
+	text('>', bb*0.3, bb*0.0125, bb*0.075, bb*0.025);
 	pop();
 }
 
