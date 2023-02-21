@@ -3,17 +3,26 @@ class Voice {
 		this.id = id;
 		this.status = 'free';
 		this.synth = new Tone.MonoSynth({
-			oscillator: {
+			oscillator: { //oscillator, envelope, filter, filterEnvelope
 				type: "square" //"sine", "square", "sawtooth", "triangle"
 			},
-			volume: {
-				value: -3
-			},
-			envelope: {
+			envelope: { //adsr dflt: 0.1 0.1 0.9 0.5
 				attack: 0.1,
 				decay: 0.1,
 				sustain: 0.9,
 				release: 0.5
+			},
+			filter: { //dflt 1 0 0
+				type: 'bandpass', //"lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "notch", "allpass", or "peaking".
+				Q: 2.,
+				frequency: 1000,
+				gain: 0
+			},
+			filterEnvelope: { //asdr dflt: 0.6 0.2 0.5 2.
+				attack: 0.1,
+				decay: 0.1,
+				sustain: 0.9,
+				release: 2.0
 			}
 		});	
 	}
@@ -27,7 +36,9 @@ class polyVoices {
 			pan: 0.,
 			volume: 0.
 		}).toDestination();
-			
+		this.w = 0.1;
+		this.mean = 1;
+
 		for(let i=0; i<this.voices; i++) {
 			this.poly.push(new Voice(i));
 			this.poly[i].synth.connect(this.chan);  
@@ -81,5 +92,13 @@ class polyVoices {
 			}
 		}
 		return false;
+	}
+	autoVolume() {
+		let activeVoices = this.countAttack();
+		let s0 = Math.max(1., activeVoices);
+
+ 		//exp avg		 
+		this.mean = this.w * s0 + (1-this.w) * this.mean;
+		this.chan.volume.value = 10*Math.log10(1.0/this.mean);
 	}
 }

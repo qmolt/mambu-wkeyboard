@@ -253,7 +253,10 @@ function draw(){
 				}
 			}
 		}
-	}	
+	}
+
+	//volume
+	polySynth.autoVolume();	
 }
 
 function drawMenu(){
