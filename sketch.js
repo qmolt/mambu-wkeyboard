@@ -27,6 +27,16 @@ let mambuIcon;
 let wkeyImg;
 let mambuAa;
 
+//buttons coord
+let xyFs = [0.0125, 0.0125, 0.05, 0.05];
+let xySeld = [0.2, 0.0125, 0.05, 0.05];
+let xySelc = [0.25, 0.0125, 0.075, 0.05];
+let xySelu = [0.325, 0.0125, 0.05, 0.05];
+let xyOctd = [0.5, 0.0125, 0.05, 0.05];
+let xyOctu = [0.57, 0.0125, 0.05, 0.05];
+let xyTrnd = [0.75, 0.0125, 0.05, 0.05];
+let xyTrnu = [0.82, 0.0125, 0.05, 0.05];
+
 //------------------------------------------------------------------------------
 function k0selectPrev(){
 	idxScale = max(0, idxScale-1);
@@ -151,8 +161,6 @@ function draw(){
 	orientationCorrection();
 	
 	if(dated){
-		mambuAa = 0.1*bb;
-
 		background(51);			
 
 		//draw menu
@@ -161,12 +169,19 @@ function draw(){
 		//draw logo
 		push();
 		rotate(ori_angle);
-		image(mambuIcon, 0.025*bb, 0.075*bb, mambuAa, mambuAa); 
-		image(wkeyImg, 0.12*bb, 0.075*bb, 2*mambuAa, mambuAa);
+		image(mambuIcon, 0.025*bb, 0.25*bb, 0.1*bb, 0.1*bb); 
+		image(wkeyImg, 0.12*bb, 0.25*bb, 0.2*bb, 0.1*bb);
 		pop();
 
 		//draw wkeyboard
-		wKey.setSize(20, 0.25*bb, aa-40, 0.5*bb, ori);
+		push();
+		rotate(ori_angle);
+		noStroke();
+		fill(60);
+		rect(0.01*aa, 0.39*bb, 0.98*aa, 0.55*bb); 
+		pop();
+
+		wKey.setSize(0.015*aa, 0.4*bb, 0.97*aa, 0.5*bb, ori);
 		wKey.drawKeyboard();
 
 		dated = false;
@@ -249,31 +264,33 @@ function drawMenu(){
 	noStroke();
 	
 	fill(31);
-	rect(0, 0, aa, bb*0.05);
+	rect(0, 0, aa, bb*(xyFs[3]+0.025));
 		
 	fill(210);
- 	rect(bb*0.0125, bb*0.0125, bb*0.025, bb*0.025);
-	rect(bb*0.25, bb*0.0125, bb*0.075, bb*0.025);
-	rect(bb*0.5, bb*0.0125, bb*0.03, bb*0.025);
-	rect(bb*0.5+30, bb*0.0125, bb*0.03, bb*0.025);
-	rect(bb*0.75, bb*0.0125, bb*0.03, bb*0.025);
-	rect(bb*0.75+30, bb*0.0125, bb*0.03, bb*0.025);
+ 	rect(bb*xyFs[0], bb*xyFs[1], bb*xyFs[2], bb*xyFs[3]);
+	rect(bb*xySelc[0], bb*xySelc[1], bb*xySelc[2], bb*xySelc[3]);
+	rect(bb*xyOctd[0], bb*xyOctd[1], bb*xyOctd[2], bb*xyOctd[3]);
+	rect(bb*xyOctu[0], bb*xyOctu[1], bb*xyOctu[2], bb*xyOctu[3]);
+	rect(bb*xyTrnd[0], bb*xyTrnd[1], bb*xyTrnd[2], bb*xyTrnd[3]);
+	rect(bb*xyTrnu[0], bb*xyTrnu[1], bb*xyTrnu[2], bb*xyTrnu[3]);
 
 	textAlign(CENTER, CENTER);
 	textSize(0.02*bb);
 	noStroke();
 	fill(40);
 	textFont('Helvetica');
-	text('□', bb*0.0125, bb*0.0125, bb*0.025, bb*0.025);
-	text(`${scales[idxScale].oct_div} | ${scales[idxScale].struc.length}`, bb*0.25, 10, bb*0.075, bb*0.025);
-	text('-', bb*0.5, bb*0.0125, bb*0.03, bb*0.025);
-	text('+', bb*0.5+30, bb*0.0125, bb*0.03, bb*0.025);
-	text('←', bb*0.75, bb*0.0125, bb*0.03, bb*0.025);
-	text('→', bb*0.75+30, bb*0.0125, bb*0.03, bb*0.025);
+
+	text('□', bb*xyFs[0], bb*xyFs[1], bb*xyFs[2], bb*xyFs[3]);
+	text(`${scales[idxScale].oct_div} | ${scales[idxScale].struc.length}`, 
+		bb*xySelc[0], bb*xySelc[1], bb*xySelc[2], bb*xySelc[3]);
+	text('-', bb*xyOctd[0], bb*xyOctd[1], bb*xyOctd[2], bb*xyOctu[3]);
+	text('+', bb*xyOctu[0], bb*xyOctu[1], bb*xyOctu[2], bb*xyOctu[3]);
+	text('←', bb*xyTrnd[0], bb*xyTrnd[1], bb*xyTrnd[2], bb*xyTrnd[3]);
+	text('→', bb*xyTrnu[0], bb*xyTrnu[1], bb*xyTrnu[2], bb*xyTrnu[3]);
 
 	fill(210);
-	text('<', bb*0.2, bb*0.0125, bb*0.075, bb*0.025);
-	text('>', bb*0.3, bb*0.0125, bb*0.075, bb*0.025);
+	text('<', bb*xySeld[0], bb*xySeld[1], bb*xySeld[2], bb*xySeld[3]);
+	text('>', bb*xySelu[0], bb*xySelu[1], bb*xySelu[2], bb*xySelu[3]);
 	pop();
 }
 
@@ -286,16 +303,16 @@ function playState(){
 function mousePressed(){
 	mouseAdded = true;
 
-	if(mouseX > 10 && mouseX < bb*0.025+10 && mouseY > 10 && mouseY < bb*0.025+10){fullscreenEvent();}
+	if(mouseX > bb*xyFs[0] && mouseX < bb*(xyFs[0]+xyFs[2]) && mouseY > bb*xyFs[1] && mouseY < bb*(xyFs[1]+xyFs[3])){fullscreenEvent();}
 
-	if(mouseX > bb*0.2 && mouseX < bb*0.275 && mouseY > 10 && mouseY < bb*0.025+10){k0selectPrev();}
-	if(mouseX > bb*0.3 && mouseX < bb*0.375 && mouseY > 10 && mouseY < bb*0.025+10){k0selectNext();}
+	if(mouseX > bb*xySeld[0] && mouseX < bb*(xySeld[0]+xySeld[2]) && mouseY > bb*xySeld[1] && mouseY < bb*(xySeld[1]+xySeld[3])){k0selectPrev();}
+	if(mouseX > bb*xySelu[0] && mouseX < bb*(xySelu[0]+xySelu[2]) && mouseY > bb*xySelu[1] && mouseY < bb*(xySelu[1]+xySelu[3])){k0selectNext();}
 
-	if(mouseX > bb*0.5 && mouseX < bb*0.53 && mouseY > 10 && mouseY < bb*0.025+10){k0OctDown();}
-	if(mouseX > bb*0.5+30 && mouseX < bb*0.53+30 && mouseY > 10 && mouseY < bb*0.025+10){k0OctUp();}
+	if(mouseX > bb*xyOctd[0] && mouseX < bb*(xyOctd[0]+xyOctd[2]) && mouseY > bb*xyOctd[1] && mouseY < bb*(xyOctd[1]+xyOctu[3])){k0OctDown();}
+	if(mouseX > bb*xyOctu[0] && mouseX < bb*(xyOctu[0]+xyOctu[2]) && mouseY > bb*xyOctu[1] && mouseY < bb*(xyOctu[1]+xyOctu[3])){k0OctUp();}
 
-	if(mouseX > bb*0.75 && mouseX < bb*0.78 && mouseY > 10 && mouseY < bb*0.025+10){k0TrnDown();}
-	if(mouseX > bb*0.75+30 && mouseX < bb*0.78+30 && mouseY > 10 && mouseY < bb*0.025+10){k0TrnUp();}
+	if(mouseX > bb*xyTrnd[0] && mouseX < bb*(xyTrnd[0]+xyTrnd[2]) && mouseY > bb*xyTrnd[1] && mouseY < bb*(xyTrnd[1]+xyTrnd[3])){k0TrnDown();}
+	if(mouseX > bb*xyTrnu[0] && mouseX < bb*(xyTrnu[0]+xyTrnu[2]) && mouseY > bb*xyTrnu[1] && mouseY < bb*(xyTrnu[1]+xyTrnu[3])){k0TrnUp();}
 }
 function mouseReleased(){
 	mouseAdded = false;

@@ -126,14 +126,6 @@ class wKeyboard {
 		}
 	}
 	drawKeyboard(){
-		
-		push();
-		rotate(this.ori_angle);
-		noStroke();
-		fill(60);
-		rect(this.x0, this.y0 - 25, this.w, this.h + 50); 
-		pop();
-
 		for(let i=0; i<this.t_notes; i++){
 			let note = i % this.oct_div;
 			let idx = this.struc.indexOf(note);
