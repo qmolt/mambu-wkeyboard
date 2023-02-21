@@ -1,6 +1,6 @@
 [Readme in english](https://github.com/qumolt/mambu-wkeyboard/blob/master/README.md)
 
-<img src="assets/mambu_icon.png" width="500">
+<center><img src="assets/mambu_icon.png" width="400"></center>
 
 # Acerca de
 
