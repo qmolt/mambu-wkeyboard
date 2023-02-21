@@ -4,13 +4,18 @@ class Voice {
 		this.status = 'free';
 		this.synth = new Tone.MonoSynth({
 			oscillator: {
-				type: "square"
+				type: "square" //"sine", "square", "sawtooth", "triangle"
+			},
+			volume: {
+				value: -3
 			},
 			envelope: {
 				attack: 0.1,
+				decay: 0.1,
+				sustain: 0.9,
 				release: 0.5
 			}
-		}).toDestination();	
+		});	
 	}
 }
 
@@ -18,14 +23,26 @@ class polyVoices {
 	constructor(voices) {
 		this.poly = [];
 		this.voices = voices;
-
+		this.chan = new Tone.Channel({
+			pan: 0.,
+			volume: 0.
+		}).toDestination();
+			
 		for(let i=0; i<this.voices; i++) {
-			this.poly.push(new Voice(i));  
+			this.poly.push(new Voice(i));
+			this.poly[i].synth.connect(this.chan);  
 		}
 	}
 
 	voiceIdx(id) {
 		return this.poly.findIndex(o => o.id == id);
+	}
+	countAttack() {
+		let count = 0;
+		for(let i=0; i<this.poly.length; i++){
+			if(this.poly[i].status === 'attack'){count++;}
+		}
+		return count;
 	}
 	availableVoices() {
 		found = this.poly.find(o => o.status === 'free')

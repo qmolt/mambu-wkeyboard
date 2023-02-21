@@ -1,14 +1,16 @@
 [Readme in english](https://github.com/qumolt/mambu-wkeyboard/blob/master/README_EN.md)
 
-# Acerca de
+<img src="assets/mambu_icon.png" width="500">
 
-__Mambú wKeyboard__ es un teclado que interpreta diferentes afinaciones y divisiones de octava. Las escalas representadas son escalas _r_-cohemitonicas originadas por intervalos totativos, siendo _'r'_ la restricción de notas consecutivas posibles en el ancho de banda crítico desde 1kHz.
-Esta aplicación está escrita en Javascript, hecha con [P5.js](https://p5js.org/es/) y [Tone.js](https://tonejs.github.io/).
-La fuente utilizada es [Gest](https://github.com/laictype/Gest_Open)
+# About
+
+__Mambú wKeyboard__ is a keyboard that can play several tunings and divisions of an octave. The scales represented are _r_-cohemitonic scales made from totative intervals, with _'r'_ as a restriction of possible consecutive notes in the critical bandwidth from 1kHz. 
+This app is written with Javascript, made with [P5.js](https://p5js.org/) and [Tone.js](https://tonejs.github.io/).
+The text font used is [Gest](https://github.com/laictype/Gest_Open)
 
 ---
 
-# Notas
+# Notes
 
-- Todas las afinaciones comparten una propiedad: la primera nota de la escala de la quinta octava está afinada a 261,6255... Hz, esto signigica que la primera nota de la escala para cada octava tienen la misma frecuencia. Esto tambien significa que A = 440 Hz para la afinación y escala de '12 | 7'. 
-- Mambú fue el nombre de un perro loco con orejas de peluche. Este proyecto lleva su nombre como homenaje.
+- All the tunings share one thing in common: the fifth octave's first note is tuned to 261,6255... Hz, this means every scale's first note of an octave has the same frequency. This also means that A = 440Hz for the '12 | 7' scale.
+- Mambú was the name of a crazy dog with teddy-bear ears. This project is named after him as a tribute.

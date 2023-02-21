@@ -178,7 +178,7 @@ function draw(){
 		rotate(ori_angle);
 		noStroke();
 		fill(60);
-		rect(0.01*aa, 0.39*bb, 0.98*aa, 0.55*bb); 
+		rect(0.01*aa, 0.39*bb, 0.98*aa, 0.61*bb); 
 		pop();
 
 		wKey.setSize(0.015*aa, 0.4*bb, 0.97*aa, 0.5*bb, ori);
