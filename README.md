@@ -1,4 +1,4 @@
-[Readme in spanish](https://github.com/qumolt/mambu-wkeyboard/blob/master/README_ES.md)
+['README' en Español](https://github.com/qumolt/mambu-wkeyboard/blob/master/README_ES.md)
 
 <img src="assets/mambu_icon.png" width="400">
 
