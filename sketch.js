@@ -304,18 +304,14 @@ function playState(){
 	Tone.Transport.start();
 }
 function mousePressed(){
-	mouseAdded = true;
-
 	if(mouseX > bb*xyFs[0] && mouseX < bb*(xyFs[0]+xyFs[2]) && mouseY > bb*xyFs[1] && mouseY < bb*(xyFs[1]+xyFs[3])){fullscreenEvent();}
-
-	if(mouseX > bb*xySeld[0] && mouseX < bb*(xySeld[0]+xySeld[2]) && mouseY > bb*xySeld[1] && mouseY < bb*(xySeld[1]+xySeld[3])){k0selectPrev();}
-	if(mouseX > bb*xySelu[0] && mouseX < bb*(xySelu[0]+xySelu[2]) && mouseY > bb*xySelu[1] && mouseY < bb*(xySelu[1]+xySelu[3])){k0selectNext();}
-
-	if(mouseX > bb*xyOctd[0] && mouseX < bb*(xyOctd[0]+xyOctd[2]) && mouseY > bb*xyOctd[1] && mouseY < bb*(xyOctd[1]+xyOctu[3])){k0OctDown();}
-	if(mouseX > bb*xyOctu[0] && mouseX < bb*(xyOctu[0]+xyOctu[2]) && mouseY > bb*xyOctu[1] && mouseY < bb*(xyOctu[1]+xyOctu[3])){k0OctUp();}
-
-	if(mouseX > bb*xyTrnd[0] && mouseX < bb*(xyTrnd[0]+xyTrnd[2]) && mouseY > bb*xyTrnd[1] && mouseY < bb*(xyTrnd[1]+xyTrnd[3])){k0TrnDown();}
-	if(mouseX > bb*xyTrnu[0] && mouseX < bb*(xyTrnu[0]+xyTrnu[2]) && mouseY > bb*xyTrnu[1] && mouseY < bb*(xyTrnu[1]+xyTrnu[3])){k0TrnUp();}
+	else if(mouseX > bb*xySeld[0] && mouseX < bb*(xySeld[0]+xySeld[2]) && mouseY > bb*xySeld[1] && mouseY < bb*(xySeld[1]+xySeld[3])){k0selectPrev();}
+	else if(mouseX > bb*xySelu[0] && mouseX < bb*(xySelu[0]+xySelu[2]) && mouseY > bb*xySelu[1] && mouseY < bb*(xySelu[1]+xySelu[3])){k0selectNext();}
+	else if(mouseX > bb*xyOctd[0] && mouseX < bb*(xyOctd[0]+xyOctd[2]) && mouseY > bb*xyOctd[1] && mouseY < bb*(xyOctd[1]+xyOctu[3])){k0OctDown();}
+	else if(mouseX > bb*xyOctu[0] && mouseX < bb*(xyOctu[0]+xyOctu[2]) && mouseY > bb*xyOctu[1] && mouseY < bb*(xyOctu[1]+xyOctu[3])){k0OctUp();}
+	else if(mouseX > bb*xyTrnd[0] && mouseX < bb*(xyTrnd[0]+xyTrnd[2]) && mouseY > bb*xyTrnd[1] && mouseY < bb*(xyTrnd[1]+xyTrnd[3])){k0TrnDown();}
+	else if(mouseX > bb*xyTrnu[0] && mouseX < bb*(xyTrnu[0]+xyTrnu[2]) && mouseY > bb*xyTrnu[1] && mouseY < bb*(xyTrnu[1]+xyTrnu[3])){k0TrnUp();}
+	else{mouseAdded = true;}
 }
 function mouseReleased(){
 	mouseAdded = false;
