@@ -82,11 +82,11 @@ function fullscreenEvent() {
 }
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
+	ori = (windowWidth>windowHeight)?'landscape':'portrait';
 	dated = true;
+	console.log('lala')
 }
 function orientationCorrection() {
-	ori = (windowWidth>windowHeight)?'landscape':'portrait';
-
 	if(ori === 'portrait'){
 	//if(true){ //debug
 		translate(windowWidth, 0);
@@ -148,9 +148,9 @@ function preload(){
 }
 
 function setup(){
-	
+
 	//canvas
-	cnv0 = createCanvas(displayWidth, displayHeight);
+	cnv0 = createCanvas(10, 10);
 	cnv0.style('display', 'block');
 	cnv0.parent('sketch-holder');
 	cnv0.mousePressed(playState);
@@ -169,6 +169,8 @@ function setup(){
 	rectMode(CORNER);
 }
 function draw(){
+	if(max(windowWidth, windowHeight) != max(width, height)){windowResized();}
+
 	orientationCorrection();
 	
 	if(dated){
