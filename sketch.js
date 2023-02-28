@@ -21,11 +21,16 @@ let aa; //long side
 let bb; //short side
 
 //assets
-let screenFont;
-let fontReady = false;
 let mambuIcon;
 let wkeyImg;
-let mambuAa;
+let oscImg;
+let envImg;
+let filtImg;
+let envFiltImg;
+
+//synth
+let oscN = 0;
+let filtN = 0;
 
 //buttons coord
 let xyFs = [0.0125, 0.0125, 0.05, 0.05];
@@ -37,6 +42,7 @@ let xyOctu = [0.57, 0.0125, 0.05, 0.05];
 let xyTrnd = [0.75, 0.0125, 0.05, 0.05];
 let xyTrnu = [0.82, 0.0125, 0.05, 0.05];
 
+let xyOsc = [0.48, 0.125, 0.1, 0.3];
 //------------------------------------------------------------------------------
 function k0selectPrev(){
 	idxScale = max(0, idxScale-1);
@@ -91,9 +97,6 @@ function orientationCorrection() {
 		ori = 'landscape';
 	}
 }
-function fontRead(){
-    fontReady = true;
-}
 
 //p5----------------------------------------------------------------------------
 function preload(){
@@ -135,6 +138,10 @@ function preload(){
 
 	mambuIcon = loadImage('assets/icon.png');
 	wkeyImg = loadImage('assets/wkeyboard.png');
+	oscImg = loadImage('assets/osc.png');
+	envImg = loadImage('assets/env.png');
+	filtImg = loadImage('assets/filter.png');
+	envFiltImg = loadImage('assets/env.png');
 }
 
 function setup(){
@@ -147,7 +154,6 @@ function setup(){
 	cnv0.touchStarted(playState);
 
 	orientationCorrection();
-	imageMode(CORNER);
 
 	//keyboard 1----------------------------------
 	wKey = new wKeyboard(scales[idxScale].oct_div, scales[idxScale].struc);
@@ -155,6 +161,9 @@ function setup(){
 	//audio---------------------------------------
 	polySynth = new polyVoices(10);
 	
+	//
+	imageMode(CORNER);
+	rectMode(CORNER);
 }
 function draw(){
 	if(windowWidth != width && windowHeight != height){windowResized();}
@@ -166,11 +175,36 @@ function draw(){
 		//draw menu
 		drawMenu();	
 
-		//draw logo
+		//draw imgs
 		push();
 		rotate(ori_angle);
-		image(mambuIcon, 0.025*bb, 0.25*bb, 0.1*bb, 0.1*bb); 
-		image(wkeyImg, 0.12*bb, 0.25*bb, 0.2*bb, 0.1*bb);
+
+		//logo
+		image(mambuIcon, 0.015*aa, 0.3*bb, 0.1*bb, 0.1*bb); 
+		image(wkeyImg, 0.12*bb, 0.3*bb, 0.2*bb, 0.1*bb);
+
+		//synth prop
+		stroke(220);
+		strokeWeight(5);
+		line(0.49*aa, 0.35*bb, aa, 0.35*bb);
+		//line(0.85*aa, 0.25*bb, 0.85*aa, 0.275*bb);
+		noStroke();
+		fill(80);
+		rect(0.48*aa, 0.125*bb, 0.1*bb, 0.3*bb); 	//osc
+		//rect(0.57*aa, 0.275*bb, 0.27*bb, 0.15*bb); 	//env
+		//rect(0.775*aa, 0.1*bb, 0.27*bb, 0.15*bb); 	//envfilt
+		//rect(0.775*aa, 0.275*bb, 0.27*bb, 0.15*bb);	//filt
+
+		fill(195, 180, 121);
+		rect(0.48*aa+0.016*bb, 0.141*bb+0.067*bb*oscN, 0.067*bb, 0.067*bb);
+		let filtNx = filtN%4;
+		let filtNy = Math.trunc(filtN/4);
+		//rect(0.775*aa+0.015*bb+0.06*bb*filtNx, 0.29*bb+0.03*bb*filtNy, 0.06*bb, 0.03*bb);
+
+		image(oscImg, 0.48*aa, 0.125*bb, 0.1*bb, 0.3*bb); 		//1:3
+		//image(envImg, 0.57*aa, 0.275*bb, 0.27*bb, 0.15*bb); 	//9:5
+		//image(envFiltImg, 0.775*aa, 0.1*bb, 0.27*bb, 0.15*bb); 	//9:5
+		//image(filtImg, 0.775*aa, 0.275*bb, 0.27*bb, 0.15*bb); 	//9:5
 		pop();
 
 		//draw wkeyboard
@@ -178,10 +212,10 @@ function draw(){
 		rotate(ori_angle);
 		noStroke();
 		fill(60);
-		rect(0.01*aa, 0.39*bb, 0.98*aa, 0.61*bb); 
+		rect(0.01*aa, 0.44*bb, 0.98*aa, 0.61*bb); 
 		pop();
 
-		wKey.setSize(0.015*aa, 0.4*bb, 0.97*aa, 0.5*bb, ori);
+		wKey.setSize(0.015*aa, 0.45*bb, 0.97*aa, 0.5*bb, ori);
 		wKey.drawKeyboard();
 
 		dated = false;
@@ -263,7 +297,6 @@ function drawMenu(){
 
 	push();
 	rotate(ori_angle);
-	rectMode(CORNER);
 	noStroke();
 	
 	fill(31);
@@ -298,19 +331,42 @@ function drawMenu(){
 }
 
 function playState(){
-
 	Tone.start();
 	Tone.Transport.loop = false;
 	Tone.Transport.start();
 }
+function touchStarted(){
+
+	//prevent dflt
+	return false;
+}
 function mousePressed(){
-	if(mouseX > bb*xyFs[0] && mouseX < bb*(xyFs[0]+xyFs[2]) && mouseY > bb*xyFs[1] && mouseY < bb*(xyFs[1]+xyFs[3])){fullscreenEvent();}
-	else if(mouseX > bb*xySeld[0] && mouseX < bb*(xySeld[0]+xySeld[2]) && mouseY > bb*xySeld[1] && mouseY < bb*(xySeld[1]+xySeld[3])){k0selectPrev();}
-	else if(mouseX > bb*xySelu[0] && mouseX < bb*(xySelu[0]+xySelu[2]) && mouseY > bb*xySelu[1] && mouseY < bb*(xySelu[1]+xySelu[3])){k0selectNext();}
-	else if(mouseX > bb*xyOctd[0] && mouseX < bb*(xyOctd[0]+xyOctd[2]) && mouseY > bb*xyOctd[1] && mouseY < bb*(xyOctd[1]+xyOctu[3])){k0OctDown();}
-	else if(mouseX > bb*xyOctu[0] && mouseX < bb*(xyOctu[0]+xyOctu[2]) && mouseY > bb*xyOctu[1] && mouseY < bb*(xyOctu[1]+xyOctu[3])){k0OctUp();}
-	else if(mouseX > bb*xyTrnd[0] && mouseX < bb*(xyTrnd[0]+xyTrnd[2]) && mouseY > bb*xyTrnd[1] && mouseY < bb*(xyTrnd[1]+xyTrnd[3])){k0TrnDown();}
-	else if(mouseX > bb*xyTrnu[0] && mouseX < bb*(xyTrnu[0]+xyTrnu[2]) && mouseY > bb*xyTrnu[1] && mouseY < bb*(xyTrnu[1]+xyTrnu[3])){k0TrnUp();}
+	let pX, pY;
+
+	if(ori==='landscape'){
+		pX = mouseX; 
+		pY = mouseY;
+	}
+	else{
+		pX = mouseY;
+		pY = bb - mouseX;
+	}
+
+	if(pY < bb*(xyFs[3]+0.025)){
+		if(pX > bb*xyFs[0] && pX < bb*(xyFs[0]+xyFs[2]) && pY > bb*xyFs[1] && pY < bb*(xyFs[1]+xyFs[3])){fullscreenEvent();}
+		else if(pX > bb*xySeld[0] && pX < bb*(xySeld[0]+xySeld[2]) && pY > bb*xySeld[1] && pY < bb*(xySeld[1]+xySeld[3])){k0selectPrev();}
+		else if(pX > bb*xySelu[0] && pX < bb*(xySelu[0]+xySelu[2]) && pY > bb*xySelu[1] && pY < bb*(xySelu[1]+xySelu[3])){k0selectNext();}
+		else if(pX > bb*xyOctd[0] && pX < bb*(xyOctd[0]+xyOctd[2]) && pY > bb*xyOctd[1] && pY < bb*(xyOctd[1]+xyOctu[3])){k0OctDown();}
+		else if(pX > bb*xyOctu[0] && pX < bb*(xyOctu[0]+xyOctu[2]) && pY > bb*xyOctu[1] && pY < bb*(xyOctu[1]+xyOctu[3])){k0OctUp();}
+		else if(pX > bb*xyTrnd[0] && pX < bb*(xyTrnd[0]+xyTrnd[2]) && pY > bb*xyTrnd[1] && pY < bb*(xyTrnd[1]+xyTrnd[3])){k0TrnDown();}
+		else if(pX > bb*xyTrnu[0] && pX < bb*(xyTrnu[0]+xyTrnu[2]) && pY > bb*xyTrnu[1] && pY < bb*(xyTrnu[1]+xyTrnu[3])){k0TrnUp();}
+	}
+	else if(pY < 0.45*bb){
+		if(overOsc(pX, pY)){return;}
+		//if(overEnv(pX, pY)){return;}
+		//if(overFiltEnv(pX, pY)){return;}
+		//if(overFilter(pX, pY)){return;}
+	}
 	else{mouseAdded = true;}
 }
 function mouseReleased(){
@@ -319,18 +375,52 @@ function mouseReleased(){
 	touches.splice(idxT, 1);
 }
 
+function overOsc(mX, mY){ //1:3 
+	let pX0 = aa*xyOsc[0];	
+	let pY0 = bb*xyOsc[1];
+	let sqW = bb*xyOsc[2]/6;	//1:4:1 = 6
+	let sqH = bb*xyOsc[3]/18;	//1:4x4:1 = 18
+
+	if(mX > pX0+sqW && mX < pX0+5*sqW && mY > pY0+sqH && mY < pY0+17*sqH){
+		oscN = Math.trunc((mY-pY0-sqH)/(4*sqH));
+		
+		if(oscN == 0){polySynth.setOscType('sine');}
+		else if(oscN == 1){polySynth.setOscType('triangle');}
+		else if(oscN == 2){polySynth.setOscType('sawtooth');}
+		else if(oscN == 3){polySynth.setOscType('square');}
+		dated = true;
+		
+		return true;
+	}
+	return false;
+}
+function overEnv(mX, mY){ //9:5
+	let pX0;
+	let pY0;
+	let sqW = oscW/54;	//3:6*2:4*2:8*2:6*2:3 = 54
+	let sqH = oscH/30;	//3:12*2:3 = 30
+}
+function overFiltEnv(mX, mY){ //9:5
+	let pX0;
+	let pY0;
+	let sqW = oscW/54;	//3:6*2:4*2:8*2:6*2:3 = 54
+	let sqH = oscH/30;	//3:12*2:3 = 30
+}
+function overFilter(mX, mY){ //9:5
+	let pX0;
+	let pY0;
+	let sqW = oscW/18;	//1:4x4:1 = 18 //2:4:1:4:1:4:2 = 18
+	let sqH = oscH/10;	//1:2:2:1:3:1 = 10
+}
+
 //aux---------------------------------------------------------------------------
 function zMod(x, mod){
 	while(x < 0){ x += mod; }
 	return (x % mod);
 }
 function fl_mtof(oct_div, midi_note){
-	const oct_mult = 2.0;
-	const freq0 = 261.625565300598;
-	return freq0 * Math.pow(oct_mult, midi_note/oct_div - 5);
+	return 8.175798915643687 * Math.pow(2.0, midi_note/oct_div);
 }
 function fl_ftom(oct_div, frequency){
-	const oct_mult = 2.0;
-	const freq0 = 261.625565300598;
-	return oct_div * (Math.log(frequency / freq0) / Math.log(oct_mult) + 5);
+	return oct_div * (Math.log(frequency) * 1.442695040889 - 3.031359713524656);
 }
