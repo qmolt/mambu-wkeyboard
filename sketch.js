@@ -150,7 +150,7 @@ function preload(){
 function setup(){
 	
 	//canvas
-	cnv0 = createCanvas(displayWidth, displayHeight);
+	cnv0 = createCanvas(windowWidth, windowHeight);
 	cnv0.style('display', 'block');
 	cnv0.parent('sketch-holder');
 	cnv0.mousePressed(playState);
@@ -169,7 +169,6 @@ function setup(){
 	rectMode(CORNER);
 }
 function draw(){
-	if(windowWidth != width && windowHeight != height){windowResized();}
 	orientationCorrection();
 	
 	if(dated){
