@@ -43,6 +43,9 @@ let xyTrnd = [0.75, 0.0125, 0.05, 0.05];
 let xyTrnu = [0.82, 0.0125, 0.05, 0.05];
 
 let xyOsc = [0.48, 0.125, 0.1, 0.3];
+let xyEnv = [0.57, 0.275, 0.27, 0.15];
+let xyFiltEnv = [0.775, 0.1, 0.27, 0.15];
+let xyFilt = [0.775, 0.275, 0.27, 0.15];
 //------------------------------------------------------------------------------
 function k0selectPrev(){
 	idxScale = max(0, idxScale-1);
@@ -82,19 +85,19 @@ function windowResized() {
 	dated = true;
 }
 function orientationCorrection() {
-	if(deviceOrientation === 'portrait'){
+	ori = (width>height)?'landscape':'portrait';
+
+	if(ori === 'portrait'){
 	//if(true){ //debug
 		translate(width, 0);
 		ori_angle = HALF_PI;
 		aa = height;
 		bb = width;
-		ori = 'portrait';
 	}
 	else{
 		ori_angle = 0;
 		aa = width;
 		bb = height;
-		ori = 'landscape';
 	}
 }
 
@@ -187,24 +190,25 @@ function draw(){
 		stroke(220);
 		strokeWeight(5);
 		line(0.49*aa, 0.35*bb, aa, 0.35*bb);
-		//line(0.85*aa, 0.25*bb, 0.85*aa, 0.275*bb);
+		line(0.85*aa, 0.25*bb, 0.85*aa, 0.275*bb);
 		noStroke();
 		fill(80);
-		rect(0.48*aa, 0.125*bb, 0.1*bb, 0.3*bb); 	//osc
-		//rect(0.57*aa, 0.275*bb, 0.27*bb, 0.15*bb); 	//env
-		//rect(0.775*aa, 0.1*bb, 0.27*bb, 0.15*bb); 	//envfilt
-		//rect(0.775*aa, 0.275*bb, 0.27*bb, 0.15*bb);	//filt
+		rect(xyOsc[0]*aa, xyOsc[1]*bb, xyOsc[2]*bb, xyOsc[3]*bb); 	//osc
+		rect(xyEnv[0]*aa, xyEnv[1]*bb, xyEnv[2]*bb, xyEnv[3]*bb); 	//env
+		rect(xyFiltEnv[0]*aa, xyFiltEnv[1]*bb, xyFiltEnv[2]*bb, xyFiltEnv[3]*bb); 	//envfilt
+		rect(xyFilt[0]*aa, xyFilt[1]*bb, xyFilt[2]*bb, xyFilt[3]*bb);	//filt
 
-		fill(195, 180, 121);
+		fill(195, 180, 121); 
 		rect(0.48*aa+0.016*bb, 0.141*bb+0.067*bb*oscN, 0.067*bb, 0.067*bb);
 		let filtNx = filtN%4;
 		let filtNy = Math.trunc(filtN/4);
-		//rect(0.775*aa+0.015*bb+0.06*bb*filtNx, 0.29*bb+0.03*bb*filtNy, 0.06*bb, 0.03*bb);
+		rect(0.775*aa+0.015*bb+0.06*bb*filtNx, 0.29*bb+0.03*bb*filtNy, 0.06*bb, 0.03*bb);
+		//fill(85, 148, 174);
 
-		image(oscImg, 0.48*aa, 0.125*bb, 0.1*bb, 0.3*bb); 		//1:3
-		//image(envImg, 0.57*aa, 0.275*bb, 0.27*bb, 0.15*bb); 	//9:5
-		//image(envFiltImg, 0.775*aa, 0.1*bb, 0.27*bb, 0.15*bb); 	//9:5
-		//image(filtImg, 0.775*aa, 0.275*bb, 0.27*bb, 0.15*bb); 	//9:5
+		image(oscImg, xyOsc[0]*aa, xyOsc[1]*bb, xyOsc[2]*bb, xyOsc[3]*bb);
+		image(envImg, xyEnv[0]*aa, xyEnv[1]*bb, xyEnv[2]*bb, xyEnv[3]*bb);
+		image(envFiltImg, xyFiltEnv[0]*aa, xyFiltEnv[1]*bb, xyFiltEnv[2]*bb, xyFiltEnv[3]*bb);
+		image(filtImg, xyFilt[0]*aa, xyFilt[1]*bb, xyFilt[2]*bb, xyFilt[3]*bb);
 		pop();
 
 		//draw wkeyboard
@@ -363,9 +367,9 @@ function mousePressed(){
 	}
 	else if(pY < 0.45*bb){
 		if(overOsc(pX, pY)){return;}
-		//if(overEnv(pX, pY)){return;}
-		//if(overFiltEnv(pX, pY)){return;}
-		//if(overFilter(pX, pY)){return;}
+		if(overEnv(pX, pY)){return;}
+		if(overFiltEnv(pX, pY)){return;}
+		if(overFilter(pX, pY)){return;}
 	}
 	else{mouseAdded = true;}
 }
@@ -382,8 +386,10 @@ function overOsc(mX, mY){ //1:3
 	let sqH = bb*xyOsc[3]/18;	//1:4x4:1 = 18
 
 	if(mX > pX0+sqW && mX < pX0+5*sqW && mY > pY0+sqH && mY < pY0+17*sqH){
-		oscN = Math.trunc((mY-pY0-sqH)/(4*sqH));
-		
+		let oscNum = Math.trunc((mY-pY0-sqH)/(4*sqH));
+		if(oscNum == oscN){return false;}
+		oscN = oscNum;
+
 		if(oscN == 0){polySynth.setOscType('sine');}
 		else if(oscN == 1){polySynth.setOscType('triangle');}
 		else if(oscN == 2){polySynth.setOscType('sawtooth');}
@@ -395,22 +401,60 @@ function overOsc(mX, mY){ //1:3
 	return false;
 }
 function overEnv(mX, mY){ //9:5
-	let pX0;
-	let pY0;
-	let sqW = oscW/54;	//3:6*2:4*2:8*2:6*2:3 = 54
-	let sqH = oscH/30;	//3:12*2:3 = 30
+	let pX0 = aa*xyEnv[0];
+	let pY0 = bb*xyEnv[1];
+	let sqW = bb*xyEnv[2]/54;	//3:6*2:4*2:8*2:6*2:3 = 54
+	let sqH = bb*xyEnv[3]/30;	//3:12*2:3 = 30
+
+	if(mX > pX0+3*sqW && mX < pX0+51*sqW && mY > pY0+3*sqH && mY < pY0+27*sqH){
+		//
+		return true;
+	}
+	return false;
 }
 function overFiltEnv(mX, mY){ //9:5
-	let pX0;
-	let pY0;
-	let sqW = oscW/54;	//3:6*2:4*2:8*2:6*2:3 = 54
-	let sqH = oscH/30;	//3:12*2:3 = 30
+	let pX0 = aa*xyFiltEnv[0];
+	let pY0 = bb*xyFiltEnv[1];
+	let sqW = bb*xyFiltEnv[2]/54;	//3:6*2:4*2:8*2:6*2:3 = 54
+	let sqH = bb*xyFiltEnv[3]/30;	//3:12*2:3 = 30
+
+	if(mX > pX0+3*sqW && mX < pX0+51*sqW && mY > pY0+3*sqH && mY < pY0+27*sqH){
+		//
+		return true;
+	}
+	return false;
 }
 function overFilter(mX, mY){ //9:5
-	let pX0;
-	let pY0;
-	let sqW = oscW/18;	//1:4x4:1 = 18 //2:4:1:4:1:4:2 = 18
-	let sqH = oscH/10;	//1:2:2:1:3:1 = 10
+	let pX0 = aa*xyFilt[0];
+	let pY0 = bb*xyFilt[1];
+	let sqW = bb*xyFilt[2]/18;	//1:4x4:1 = 18 //2:4:1:4:1:4:2 = 18
+	let sqH = bb*xyFilt[3]/10;	//1:2x2:1:3:1 = 10
+
+	if(mX > pX0+sqW && mX < pX0+17*sqW && mY > pY0+sqH && mY < pY0+5*sqH){
+		let filtNumX = Math.trunc((mX-pX0-sqW)/(4*sqH));
+		let filtNumY = Math.trunc((mY-pY0-sqH)/(2*sqH))
+		filtNum = filtNumX+filtNumY*4;
+		
+		if(filtNum == filtN){return false;}
+		filtN = filtNum;
+		
+		if(filtN == 0){polySynth.setFilterType('allpass');}
+		else if(filtN == 1){polySynth.setFilterType('lowpass');}
+		else if(filtN == 2){polySynth.setFilterType('highshelf');}
+		else if(filtN == 3){polySynth.setFilterType('notch');}
+		else if(filtN == 4){polySynth.setFilterType('bandpass');}
+		else if(filtN == 5){polySynth.setFilterType('highpass');}
+		else if(filtN == 6){polySynth.setFilterType('lowshelf');}
+		else if(filtN == 7){polySynth.setFilterType('peaking');}
+		dated = true;
+
+		return true;
+	}
+	else if(mX > pX0+2*sqW && mX < pX0+16*sqW && mY > pY0+6*sqH && mY < pY0+9*sqH){
+		//
+		return true;
+	}
+	return false;
 }
 
 //aux---------------------------------------------------------------------------
