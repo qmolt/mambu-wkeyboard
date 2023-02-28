@@ -85,19 +85,19 @@ function windowResized() {
 	dated = true;
 }
 function orientationCorrection() {
-	ori = (width>height)?'landscape':'portrait';
+	ori = (windowWidth>windowHeight)?'landscape':'portrait';
 
 	if(ori === 'portrait'){
 	//if(true){ //debug
-		translate(width, 0);
+		translate(windowWidth, 0);
 		ori_angle = HALF_PI;
-		aa = height;
-		bb = width;
+		aa = windowHeight;
+		bb = windowWidth;
 	}
 	else{
 		ori_angle = 0;
-		aa = width;
-		bb = height;
+		aa = windowWidth;
+		bb = windowHeight;
 	}
 }
 
