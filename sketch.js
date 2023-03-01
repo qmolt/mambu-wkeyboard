@@ -88,15 +88,15 @@ function windowResized() {
 function orientationCorrection() {
 	if(ori === 'portrait'){
 	//if(true){ //debug
-		translate(windowWidth, 0);
+		translate(width, 0);
 		ori_angle = HALF_PI;
-		aa = windowHeight;
-		bb = windowWidth;
+		aa = height;
+		bb = width;
 	}
 	else{
 		ori_angle = 0;
-		aa = windowWidth;
-		bb = windowHeight;
+		aa = width;
+		bb = height;
 	}
 }
 
