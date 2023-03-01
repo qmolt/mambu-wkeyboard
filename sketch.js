@@ -84,7 +84,6 @@ function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
 	ori = (windowWidth>windowHeight)?'landscape':'portrait';
 	dated = true;
-	console.log('lala')
 }
 function orientationCorrection() {
 	if(ori === 'portrait'){
@@ -169,7 +168,7 @@ function setup(){
 	rectMode(CORNER);
 }
 function draw(){
-	if(max(windowWidth, windowHeight) != max(width, height)){windowResized();}
+	if(windowWidth != width && windowHeight != height){windowResized();}
 
 	orientationCorrection();
 	
