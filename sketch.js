@@ -82,10 +82,10 @@ function fullscreenEvent() {
 }
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
+	ori = (windowWidth>windowHeight)?'landscape':'portrait';
 	dated = true;
 }
 function orientationCorrection() {
-	ori = (windowWidth>windowHeight)?'landscape':'portrait';
 	if(ori === 'portrait'){
 	//if(true){ //debug
 		translate(width, 0);
@@ -155,6 +155,7 @@ function setup(){
 	cnv0.mousePressed(playState);
 	cnv0.touchStarted(playState);
 
+	ori = (windowWidth>windowHeight)?'landscape':'portrait';
 	orientationCorrection();
 
 	//keyboard 1----------------------------------
