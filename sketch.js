@@ -340,11 +340,10 @@ function playState(){
 	Tone.Transport.loop = false;
 	Tone.Transport.start();
 }
-function touchStarted(){
-
+//function touchStarted(){
 	//prevent dflt
-	return false;
-}
+//	return false;
+//}
 function mousePressed(){
 	let pX, pY;
 
