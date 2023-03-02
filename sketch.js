@@ -251,7 +251,7 @@ function draw(){
 
 		//logo
 		image(mambuIcon, 0.015*aa, 0.3*bb, 0.1*bb, 0.1*bb); 
-		image(wkeyImg, 0.12*bb, 0.3*bb, 0.2*bb, 0.1*bb);
+		image(wkeyImg, 0.075*aa, 0.3*bb, 0.2*bb, 0.1*bb);
 
 		//synth prop
 		stroke(220);
@@ -441,43 +441,42 @@ function mousePressed(){
 		else if(mX > xyTrnu[0] && mX < xyTrnu[0]+xyTrnu[2] && mY > xyTrnu[1] && mY < xyTrnu[1]+xyTrnu[3]){k0TrnUp();}
 	}
 	else if(mY < 0.45*bb && mX > 0.47*aa){
-		if(mX > xyOsc[0]+(1/6)*xyOsc[2] && mX < xyOsc[0]+(5/6)*xyOsc[2] && 
-			mY > xyOsc[1]+(1/18)*xyOsc[3] && mY < xyOsc[1]+(17/18)*xyOsc[3]){
-			let oscNum = Math.trunc((mY-xyOsc[1]-(1/18)*xyOsc[3])/((4/18)*xyOsc[3]));
+		if(mX > xyOsc[0]+0.1666*xyOsc[2] && mX < xyOsc[0]+0.8333*xyOsc[2] && 
+			mY > xyOsc[1]+0.0555*xyOsc[3] && mY < xyOsc[1]+0.9444*xyOsc[3]){
+			let oscNum = Math.trunc((mY-xyOsc[1]-0.0555*xyOsc[3])/(0.2222*xyOsc[3]));
 			overOsc(oscNum);
 			return;
 		}
 		
-		if(mX > xyEnv[0]+(0.0556)*xyEnv[2] && mX < xyEnv[0]+(0.0556)*xyEnv[2] + (0.2223)*xyEnv[2] && 
-			mY > (xyEnv[1]+(0.1)*xyEnv[3]) && mY < (xyEnv[1]+(0.1)*xyEnv[3]) + (0.8)*xyEnv[3]){overEnv(0); return;}
-		else if(mX > xyEnv[0]+(0.2778)*xyEnv[2] && mX < xyEnv[0]+(0.2778)*xyEnv[2] + (0.1481)*xyEnv[2] && 
-			mY > (xyEnv[1]+(0.1)*xyEnv[3]) && mY < (xyEnv[1]+(0.1)*xyEnv[3]) + (0.8)*xyEnv[3]){overEnv(1); return;}
-		else if(mX > xyEnv[0]+(0.4259)*xyEnv[2] && mX < xyEnv[0]+(0.4259)*xyEnv[2] + (0.2963)*xyEnv[2] &&
-			mY > (xyEnv[1]+(0.1)*xyEnv[3]) && mY < (xyEnv[1]+(0.1)*xyEnv[3]) + (0.8)*xyEnv[3]){overEnv(2); return;}
-		else if(mX > xyEnv[0]+(0.7222)*xyEnv[2] && mX < xyEnv[0]+(0.7222)*xyEnv[2] + (0.2223)*xyEnv[2] && 
-			mY > (xyEnv[1]+(0.1)*xyEnv[3]) && mY < (xyEnv[1]+(0.1)*xyEnv[3]) + (0.8)*xyEnv[3]){overEnv(3); return;}
+		if(mX > xyEnv[0]+0.0556*xyEnv[2] && mX < xyEnv[0]+0.2777*xyEnv[2] && 
+			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(0); return;}
+		else if(mX > xyEnv[0]+0.2778*xyEnv[2] && mX < xyEnv[0]+0.4259*xyEnv[2] && 
+			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(1); return;}
+		else if(mX > xyEnv[0]+0.4259*xyEnv[2] && mX < xyEnv[0]+0.7222*xyEnv[2] &&
+			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(2); return;}
+		else if(mX > xyEnv[0]+0.7222*xyEnv[2] && mX < xyEnv[0]+0.9444*xyEnv[2] && 
+			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(3); return;}
 		
-		if(mX > xyFiltEnv[0]+(0.0556)*xyFiltEnv[2] && mX < xyFiltEnv[0]+(0.0556)*xyFiltEnv[2] + (0.2223)*xyFiltEnv[2] &&
-			mY > (xyFiltEnv[1]+(0.1)*xyFiltEnv[3]) && mY < (xyFiltEnv[1]+(0.1)*xyFiltEnv[3]) + (0.8)*xyFiltEnv[3]){overFiltEnv(0); return;}
-		else if(mX > xyFiltEnv[0]+(0.2778)*xyFiltEnv[2] && mX < xyFiltEnv[0]+(0.2778)*xyFiltEnv[2] + (0.1481)*xyFiltEnv[2] &&
-			mY > (xyFiltEnv[1]+(0.1)*xyFiltEnv[3]) && mY < (xyFiltEnv[1]+(0.1)*xyFiltEnv[3]) + (0.8)*xyFiltEnv[3]){overFiltEnv(1); return;}
-		else if(mX > xyFiltEnv[0]+(0.4259)*xyFiltEnv[2] && mX < xyFiltEnv[0]+(0.4259)*xyFiltEnv[2] + (0.2963)*xyFiltEnv[2] &&
-			mY > (xyFiltEnv[1]+(0.1)*xyFiltEnv[3]) && mY < (xyFiltEnv[1]+(0.1)*xyFiltEnv[3]) + (0.8)*xyFiltEnv[3]){overFiltEnv(2); return;}
-		else if(mX > xyFiltEnv[0]+(0.7222)*xyFiltEnv[2] && mX < xyFiltEnv[0]+(0.7222)*xyFiltEnv[2] + (0.2223)*xyFiltEnv[2] && 
-			mY > (xyFiltEnv[1]+(0.1)*xyFiltEnv[3]) && mY < (xyFiltEnv[1]+(0.1)*xyFiltEnv[3]) + (0.8)*xyFiltEnv[3]){overFiltEnv(3); return;}
+		if(mX > xyFiltEnv[0]+0.0556*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.2777*xyFiltEnv[2] &&
+			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(0); return;}
+		else if(mX > xyFiltEnv[0]+0.2778*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.4259*xyFiltEnv[2] &&
+			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(1); return;}
+		else if(mX > xyFiltEnv[0]+0.4259*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.7222*xyFiltEnv[2] &&
+			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(2); return;}
+		else if(mX > xyFiltEnv[0]+0.7222*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.9444*xyFiltEnv[2] && 
+			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(3); return;}
 
-		if(mX > xyFilt[0]+(0.1112)*xyFilt[2] && mX < xyFilt[0]+(0.1112)*xyFilt[2] + (0.2223)*xyFilt[2] &&
-			mY > (xyFilt[1]+(0.6)*xyFilt[3]) && mY < (xyFilt[1]+(0.6)*xyFilt[3]) + (0.3)*xyFilt[3]){overFilterParam(0); return;}
-		else if(mX > xyFilt[0]+(0.1112+0.2778)*xyFilt[2] && mX < xyFilt[0]+(0.1112+0.2778)*xyFilt[2] + (0.2223)*xyFilt[2] &&
-			mY > (xyFilt[1]+(0.6)*xyFilt[3]) && mY < (xyFilt[1]+(0.6)*xyFilt[3]) + (0.3)*xyFilt[3]){overFilterParam(1); return;}
-		else if(mX > xyFilt[0]+(0.1112+0.5555)*xyFilt[2] && mX < xyFilt[0]+(0.1112+0.5555)*xyFilt[2] + (0.2223)*xyFilt[2] &&
-			mY > (xyFilt[1]+(0.6)*xyFilt[3]) && mY < (xyFilt[1]+(0.6)*xyFilt[3]) + (0.3)*xyFilt[3]){overFilterParam(2); return;}
-		
+		if(mX > xyFilt[0]+0.1111*xyFilt[2] && mX < xyFilt[0]+0.3333*xyFilt[2] &&
+			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(0); return;}
+		else if(mX > xyFilt[0]+0.3888*xyFilt[2] && mX < xyFilt[0]+0.6111*xyFilt[2] &&
+			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(1); return;}
+		else if(mX > xyFilt[0]+0.6666*xyFilt[2] && mX < xyFilt[0]+0.8888*xyFilt[2] &&
+			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(2); return;}		
 
-		if(mX > xyFilt[0]+(1/18)*xyFilt[2] && mX < xyFilt[0]+(17/18)*xyFilt[2] && 
-			mY > xyFilt[1]+(1/10)*xyFilt[3] && mY < xyFilt[1]+(5/10)*xyFilt[3]){
-			let filtNumX = Math.trunc((mX-xyFilt[0]-(1/18)*xyFilt[2])/((4/18)*xyFilt[2]));
-			let filtNumY = Math.trunc((mY-xyFilt[1]-(1/10)*xyFilt[3])/((2/10)*xyFilt[3]));
+		if(mX > xyFilt[0]+0.0555*xyFilt[2] && mX < xyFilt[0]+0.9444*xyFilt[2] && 
+			mY > xyFilt[1]+0.1*xyFilt[3] && mY < xyFilt[1]+0.5*xyFilt[3]){
+			let filtNumX = Math.trunc((mX-xyFilt[0]-0.0555*xyFilt[2])/(0.2222*xyFilt[2]));
+			let filtNumY = Math.trunc((mY-xyFilt[1]-0.1*xyFilt[3])/(0.2*xyFilt[3]));
 			let filtNum = filtNumX+filtNumY*4;
 			overFilterType(filtNum);
 			return;
@@ -519,8 +518,8 @@ function overOsc(oscNum, bypass = false){ //1:3
 function overEnv(envNum){ //9:5
 	//w->3:6*2:4*2:8*2:6*2:3=54 //h->3:12*2:3=30
 	if(envNum == 0){
-		xySelDrag[0] = xyEnv[0]+(0.0556)*xyEnv[2];	//xyEnv[0]+(3/54)*xyEnv[2]
-		xySelDrag[1] = xyEnv[1]+(0.1)*xyEnv[3];		//(xyEnv[1]+(3/30)*xyEnv[3])
+		xySelDrag[0] = xyEnv[0]+0.0556*xyEnv[2];	//xyEnv[0]+(3/54)*xyEnv[2]
+		xySelDrag[1] = xyEnv[1]+0.1*xyEnv[3];		//(xyEnv[1]+(3/30)*xyEnv[3])
 		xySelDrag[2] = 0.2223*xyEnv[2]; 			//(12/54)*xyEnv[2]
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
@@ -534,8 +533,8 @@ function overEnv(envNum){ //9:5
 		return true;
 	}
 	else if(envNum == 1){
-		xySelDrag[0] = xyEnv[0]+(0.2778)*xyEnv[2];	//xyEnv[0]+(15/54)*xyEnv[2]
-		xySelDrag[1] = xyEnv[1]+(0.1)*xyEnv[3];		//(xyEnv[1]+(3/30)*xyEnv[3])
+		xySelDrag[0] = xyEnv[0]+0.2778*xyEnv[2];	//xyEnv[0]+(15/54)*xyEnv[2]
+		xySelDrag[1] = xyEnv[1]+0.1*xyEnv[3];		//(xyEnv[1]+(3/30)*xyEnv[3])
 		xySelDrag[2] = 0.1481*xyEnv[2];				//(8/54)*xyEnv[2]
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
@@ -549,8 +548,8 @@ function overEnv(envNum){ //9:5
 		return true;
 	}
 	else if(envNum == 2){
-		xySelDrag[0] = xyEnv[0]+(0.4259)*xyEnv[2];	//xyEnv[0]+(23/54)*xyEnv[2]
-		xySelDrag[1] = xyEnv[1]+(0.1)*xyEnv[3];		//xyEnv[1]+(3/30)*xyEnv[3]
+		xySelDrag[0] = xyEnv[0]+0.4259*xyEnv[2];	//xyEnv[0]+(23/54)*xyEnv[2]
+		xySelDrag[1] = xyEnv[1]+0.1*xyEnv[3];		//xyEnv[1]+(3/30)*xyEnv[3]
 		xySelDrag[2] = 0.2963*xyEnv[2]; 			//(16/54)*xyEnv[2]
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
@@ -564,8 +563,8 @@ function overEnv(envNum){ //9:5
 		return true;
 	}
 	else if(envNum == 3){
-		xySelDrag[0] = xyEnv[0]+(0.7222)*xyEnv[2];	//xyEnv[0]+(39/54)*xyEnv[2]
-		xySelDrag[1] = xyEnv[1]+(0.1)*xyEnv[3];		//(xyEnv[1]+(3/30)*xyEnv[3])
+		xySelDrag[0] = xyEnv[0]+0.7222*xyEnv[2];	//xyEnv[0]+(39/54)*xyEnv[2]
+		xySelDrag[1] = xyEnv[1]+0.1*xyEnv[3];		//(xyEnv[1]+(3/30)*xyEnv[3])
 		xySelDrag[2] = 0.2223*xyEnv[2]; 			//(12/54)*xyEnv[2]
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
@@ -583,8 +582,8 @@ function overEnv(envNum){ //9:5
 function overFiltEnv(filtEnvNum){ //9:5
 	//w->3:6*2:4*2:8*2:6*2:3=54 //h->3:12*2:3 = 30
 	if(filtEnvNum == 0){
-		xySelDrag[0] = xyFiltEnv[0]+(0.0556)*xyFiltEnv[2];
-		xySelDrag[1] = xyFiltEnv[1]+(0.1)*xyFiltEnv[3];
+		xySelDrag[0] = xyFiltEnv[0]+0.0556*xyFiltEnv[2];
+		xySelDrag[1] = xyFiltEnv[1]+0.1*xyFiltEnv[3];
 		xySelDrag[2] = 0.2223*xyFiltEnv[2];
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
@@ -598,8 +597,8 @@ function overFiltEnv(filtEnvNum){ //9:5
 		return true;
 	}
 	else if(filtEnvNum == 1){
-		xySelDrag[0] = xyFiltEnv[0]+(0.2778)*xyFiltEnv[2];
-		xySelDrag[1] = xyFiltEnv[1]+(0.1)*xyFiltEnv[3];
+		xySelDrag[0] = xyFiltEnv[0]+0.2778*xyFiltEnv[2];
+		xySelDrag[1] = xyFiltEnv[1]+0.1*xyFiltEnv[3];
 		xySelDrag[2] = 0.1481*xyFiltEnv[2];
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
@@ -613,8 +612,8 @@ function overFiltEnv(filtEnvNum){ //9:5
 		return true;
 	}
 	else if(filtEnvNum == 2){
-		xySelDrag[0] = xyFiltEnv[0]+(0.4259)*xyFiltEnv[2];
-		xySelDrag[1] = xyFiltEnv[1]+(0.1)*xyFiltEnv[3];
+		xySelDrag[0] = xyFiltEnv[0]+0.4259*xyFiltEnv[2];
+		xySelDrag[1] = xyFiltEnv[1]+0.1*xyFiltEnv[3];
 		xySelDrag[2] = 0.2963*xyFiltEnv[2];
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
@@ -628,8 +627,8 @@ function overFiltEnv(filtEnvNum){ //9:5
 		return true;
 	}
 	else if(filtEnvNum == 3){
-		xySelDrag[0] = xyFiltEnv[0]+(0.7222)*xyFiltEnv[2];
-		xySelDrag[1] = xyFiltEnv[1]+(0.1)*xyFiltEnv[3];
+		xySelDrag[0] = xyFiltEnv[0]+0.7222*xyFiltEnv[2];
+		xySelDrag[1] = xyFiltEnv[1]+0.1*xyFiltEnv[3];
 		xySelDrag[2] = 0.2223*xyFiltEnv[2]; 
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
@@ -670,8 +669,8 @@ function overFilterType(filtNum, bypass = false){
 function overFilterParam(filtParam){ //9:5
 	//w->1:4x4:1=18 //2:4:1:4:1:4:2=18 //h->1:2x2:1:3:1 = 10
 	if(filtParam == 0){
-		xySelDrag[0] = xyFilt[0]+(0.1112)*xyFilt[2];	//xyFilt[0]+((2/18)*xyFilt[2]+((1/18)+(4/18))*xyFilt[2]*fSel)
-		xySelDrag[1] = xyFilt[1]+(0.6)*xyFilt[3];		//xyFilt[1]+(6/10)*xyFilt[3])
+		xySelDrag[0] = xyFilt[0]+0.1112*xyFilt[2];	//xyFilt[0]+((2/18)*xyFilt[2]+((1/18)+(4/18))*xyFilt[2]*fSel)
+		xySelDrag[1] = xyFilt[1]+0.6*xyFilt[3];		//xyFilt[1]+(6/10)*xyFilt[3])
 		xySelDrag[2] = 0.2223*xyFilt[2]; 				//(4/18)*xyFilt[2]
 		xySelDrag[3] = 0.3*xyFilt[3]; 					//(3/10)*xyFilt[3]
 
@@ -685,8 +684,8 @@ function overFilterParam(filtParam){ //9:5
 		return true;
 	}
 	else if(filtParam == 1){	
-		xySelDrag[0] = xyFilt[0]+(0.1112+0.2778)*xyFilt[2];	//xyFilt[0]+((2/18)*xyFilt[2]+((1/18)+(4/18))*xyFilt[2]*fSel)
-		xySelDrag[1] = xyFilt[1]+(0.6)*xyFilt[3];			//xyFilt[1]+(6/10)*xyFilt[3])
+		xySelDrag[0] = xyFilt[0]+0.3888*xyFilt[2];	//xyFilt[0]+((2/18)*xyFilt[2]+((1/18)+(4/18))*xyFilt[2]*fSel)
+		xySelDrag[1] = xyFilt[1]+0.6*xyFilt[3];			//xyFilt[1]+(6/10)*xyFilt[3])
 		xySelDrag[2] = 0.2223*xyFilt[2]; 					//(4/18)*xyFilt[2]
 		xySelDrag[3] = 0.3*xyFilt[3]; 						//(3/10)*xyFilt[3]
 
@@ -700,8 +699,8 @@ function overFilterParam(filtParam){ //9:5
 		return true;
 	}
 	else if(filtParam == 2){
-		xySelDrag[0] = xyFilt[0]+(0.1112+0.5555)*xyFilt[2];	//xyFilt[0]+((2/18)*xyFilt[2]+((1/18)+(4/18))*xyFilt[2]*fSel)
-		xySelDrag[1] = xyFilt[1]+(0.6)*xyFilt[3];					//xyFilt[1]+(6/10)*xyFilt[3])
+		xySelDrag[0] = xyFilt[0]+0.6666*xyFilt[2];	//xyFilt[0]+((2/18)*xyFilt[2]+((1/18)+(4/18))*xyFilt[2]*fSel)
+		xySelDrag[1] = xyFilt[1]+0.6*xyFilt[3];					//xyFilt[1]+(6/10)*xyFilt[3])
 		xySelDrag[2] = 0.2223*xyFilt[2]; 							//(4/18)*xyFilt[2]
 		xySelDrag[3] = 0.3*xyFilt[3]; 								//(3/10)*xyFilt[3]
 
