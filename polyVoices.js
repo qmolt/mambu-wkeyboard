@@ -15,14 +15,15 @@ class Voice {
 			filter: { //dflt 1 0 0
 				type: 'allpass', //"lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "notch", "allpass", or "peaking".
 				Q: 1.,
-				frequency: 1000,
 				gain: 0
 			},
 			filterEnvelope: { //asdr dflt: 0.6 0.2 0.5 2.
 				attack: 0.1,
 				decay: 0.1,
 				sustain: 0.9,
-				release: 2.0
+				release: 2.0,
+				baseFrequency: 200,
+				octaves:3
 			}
 		});	
 	}
@@ -67,6 +68,7 @@ class polyVoices {
 			this.poly[idx].synth.triggerAttack(freq);
 			this.poly[idx].status = 'attack';
 			this.poly[idx].id = id;
+			this.poly[idx].synth.filterEnvelope.baseFrequency = freq;
 			return true;
 		}
 	}
@@ -107,7 +109,7 @@ class polyVoices {
 
 	setFilterType(filtType){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filter.type = filtType;}}
 	setFilterQ(Q){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filter.Q.value = Q;}}
-	setFilterFreq(freq){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filter.frequency.value = freq;}}
+	setFilterFreq(oct){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filterEnvelope.octaves = oct;}}
 	setFilterGain(gain){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filter.gain.value = gain;}}
 
 	setEnvA(attack){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.envelope.attack = attack;}}	
@@ -125,7 +127,7 @@ class polyVoices {
 
 	getFilterType(i){if(i<this.poly.length){return this.poly[i].synth.filter.type;}return;}
 	getFilterQ(i){if(i<this.poly.length){return this.poly[i].synth.filter.Q.value;}return;}
-	getFilterFreq(i){if(i<this.poly.length){return this.poly[i].synth.filter.frequency.value;}return;}
+	getFilterFreq(i){if(i<this.poly.length){return this.poly[i].synth.filterEnvelope.octaves;}return;}
 	getFilterGain(i){if(i<this.poly.length){return this.poly[i].synth.filter.gain.value;}return;}
 
 	getEnvA(i){if(i<this.poly.length){return this.poly[i].synth.envelope.attack;}return;}	

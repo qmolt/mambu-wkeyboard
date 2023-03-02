@@ -58,7 +58,7 @@ let dLabel = '';
 let dMin = '';
 let dMax = '';
 const limFQ = [0.1, 2.0];
-const limFFreq = [100, 10000];
+const limFFreq = [-3, 3];
 const limFGain = [-100.0, 0.0];
 const limEA = [0.1, 2.];
 const limED = [0.1, 2.];
@@ -524,7 +524,7 @@ function overEnv(envNum){ //9:5
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
 		dragSel = 0;
-		dLabel = 'Attack';
+		dLabel = 'Attack (Amplitude)';
 		dMin = limEA[0];
 		dMax = limEA[1];
 		dVal = polySynth.getEnvA(0);
@@ -539,7 +539,7 @@ function overEnv(envNum){ //9:5
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
 		dragSel = 1;
-		dLabel = 'Decay';
+		dLabel = 'Decay (Amplitude)';
 		dMin = limED[0];
 		dMax = limED[1];
 		dVal = polySynth.getEnvD(0);
@@ -554,7 +554,7 @@ function overEnv(envNum){ //9:5
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
 		dragSel = 2;
-		dLabel = 'Sustain';
+		dLabel = 'Sustain (Amplitude)';
 		dMin = limES[0];
 		dMax = limES[1];
 		dVal = polySynth.getEnvS(0);
@@ -569,7 +569,7 @@ function overEnv(envNum){ //9:5
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
 		dragSel = 3;
-		dLabel = 'Release';
+		dLabel = 'Release (Amplitude)';
 		dMin = limER[0];
 		dMax = limER[1];
 		dVal = polySynth.getEnvR(0);
@@ -588,7 +588,7 @@ function overFiltEnv(filtEnvNum){ //9:5
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
 		dragSel = 4;
-		dLabel = 'Attack';
+		dLabel = 'Attack (Frequency)';
 		dMin = limFEA[0];
 		dMax = limFEA[1];
 		dVal = polySynth.getFiltEnvA(0);
@@ -603,7 +603,7 @@ function overFiltEnv(filtEnvNum){ //9:5
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
 		dragSel = 5;
-		dLabel = 'Decay';
+		dLabel = 'Decay (Frequency)';
 		dMin = limFED[0];
 		dMax = limFED[1];
 		dVal = polySynth.getFiltEnvD(0);
@@ -618,7 +618,7 @@ function overFiltEnv(filtEnvNum){ //9:5
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
 		dragSel = 6;
-		dLabel = 'Sustain';
+		dLabel = 'Sustain (Frequency)';
 		dMin = limFES[0];
 		dMax = limFES[1];
 		dVal = polySynth.getFiltEnvS(0);
@@ -633,7 +633,7 @@ function overFiltEnv(filtEnvNum){ //9:5
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
 		dragSel = 7;
-		dLabel = 'Release';
+		dLabel = 'Release (Frequency)';
 		dMin = limFER[0];
 		dMax = limFER[1];
 		dVal = polySynth.getFiltEnvR(0);
@@ -705,7 +705,7 @@ function overFilterParam(filtParam){ //9:5
 		xySelDrag[3] = 0.3*xyFilt[3]; 								//(3/10)*xyFilt[3]
 
 		dragSel = 10;
-		dLabel = 'Frequency';
+		dLabel = 'Octaves Envelope';
 		dMin = limFFreq[0];
 		dMax = limFFreq[1];
 		dVal = polySynth.getFilterFreq(0);
