@@ -103,20 +103,38 @@ class polyVoices {
 	}
 
 	//--------------------------------------------
-	setOscType(oscType){ for(let i=0; i<this.voices; i++){this.poly[i].synth.oscillator.type = oscType;}}
+	setOscType(oscType){ for(let i=0; i<this.poly.length; i++){this.poly[i].synth.oscillator.type = oscType;}}
 
-	setFilterType(filtType){for(let i=0; i<this.voices; i++){this.poly[i].synth.filter.type = filtType;}}
-	setFilterQ(Q){for(let i=0; i<this.voices; i++){this.poly[i].synth.filter.Q.value = Q;}}
-	setFilterFreq(freq){for(let i=0; i<this.voices; i++){this.poly[i].synth.filter.frequency.value = freq;}}
-	setFilterGain(gain){for(let i=0; i<this.voices; i++){this.poly[i].synth.filter.gain.value = gain;}}
+	setFilterType(filtType){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filter.type = filtType;}}
+	setFilterQ(Q){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filter.Q.value = Q;}}
+	setFilterFreq(freq){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filter.frequency.value = freq;}}
+	setFilterGain(gain){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filter.gain.value = gain;}}
 
-	setEnvA(attack){for(let i=0; i<this.voices; i++){this.poly[i].synth.envelope.attack = attack;}}	
-	setEnvD(decay){for(let i=0; i<this.voices; i++){this.poly[i].synth.envelope.decay = decay;}}	
-	setEnvS(sustain){for(let i=0; i<this.voices; i++){this.poly[i].synth.envelope.sustain = sustain;}}	
-	setEnvR(release){for(let i=0; i<this.voices; i++){this.poly[i].synth.envelope.release = release;}}	
+	setEnvA(attack){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.envelope.attack = attack;}}	
+	setEnvD(decay){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.envelope.decay = decay;}}	
+	setEnvS(sustain){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.envelope.sustain = sustain;}}	
+	setEnvR(release){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.envelope.release = release;}}	
 
-	setFiltEnvA(attack){for(let i=0; i<this.voices; i++){this.poly[i].synth.filterEnvelope.attack = attack;}}	
-	setFiltEnvD(decay){for(let i=0; i<this.voices; i++){this.poly[i].synth.filterEnvelope.decay = decay;}}	
-	setFiltEnvS(sustain){for(let i=0; i<this.voices; i++){this.poly[i].synth.filterEnvelope.sustain = sustain;}}	
-	setFiltEnvR(release){for(let i=0; i<this.voices; i++){this.poly[i].synth.filterEnvelope.release = release;}}	
+	setFiltEnvA(attack){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filterEnvelope.attack = attack;}}	
+	setFiltEnvD(decay){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filterEnvelope.decay = decay;}}	
+	setFiltEnvS(sustain){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filterEnvelope.sustain = sustain;}}	
+	setFiltEnvR(release){for(let i=0; i<this.poly.length; i++){this.poly[i].synth.filterEnvelope.release = release;}}
+
+	//--------------------------------------------
+	getOscType(i){if(i<this.poly.length){return this.poly[i].synth.oscillator.type;} return;}
+
+	getFilterType(i){if(i<this.poly.length){return this.poly[i].synth.filter.type;}return;}
+	getFilterQ(i){if(i<this.poly.length){return this.poly[i].synth.filter.Q.value;}return;}
+	getFilterFreq(i){if(i<this.poly.length){return this.poly[i].synth.filter.frequency.value;}return;}
+	getFilterGain(i){if(i<this.poly.length){return this.poly[i].synth.filter.gain.value;}return;}
+
+	getEnvA(i){if(i<this.poly.length){return this.poly[i].synth.envelope.attack;}return;}	
+	getEnvD(i){if(i<this.poly.length){return this.poly[i].synth.envelope.decay;}return;}	
+	getEnvS(i){if(i<this.poly.length){return this.poly[i].synth.envelope.sustain;}return;}	
+	getEnvR(i){if(i<this.poly.length){return this.poly[i].synth.envelope.release;}return;}	
+
+	getFiltEnvA(i){if(i<this.poly.length){return this.poly[i].synth.filterEnvelope.attack;}return;}	
+	getFiltEnvD(i){if(i<this.poly.length){return this.poly[i].synth.filterEnvelope.decay;}return;}	
+	getFiltEnvS(i){if(i<this.poly.length){return this.poly[i].synth.filterEnvelope.sustain;}return;}	
+	getFiltEnvR(i){if(i<this.poly.length){return this.poly[i].synth.filterEnvelope.release;}return;}
 }
