@@ -117,6 +117,10 @@ function windowResized(){
 	}
 	
 	setXYArrays();
+
+	overOsc(oscN, true);
+	overFilterType(filtN, true);
+	selDragElem(dragSel);
 	
 	dated = true;
 }
@@ -223,7 +227,7 @@ function setup(){
 	polySynth = new polyVoices(10);
 	overOsc(0);
 	overFilterType(0);
-	overEnv(0);
+	selDragElem(0);
 	
 	//
 	imageMode(CORNER);
@@ -495,8 +499,8 @@ function mouseReleased(){
 	touches.splice(idxT, 1);
 }
 
-function overOsc(oscNum){ //1:3 	
-	if(oscNum == oscN){return false;}
+function overOsc(oscNum, bypass = false){ //1:3 	
+	if(oscNum == oscN && !bypass){return false;}
 	oscN = oscNum;
 
 	xySelOsc[0] = xyOsc[0]+0.1667*xyOsc[2];					//xyOsc[0] + (1/6)*xyOsc[2]
@@ -640,8 +644,8 @@ function overFiltEnv(filtEnvNum){ //9:5
 	}
 	return false;
 }
-function overFilterType(filtNum){
-	if(filtNum == filtN){return false;}
+function overFilterType(filtNum, bypass = false){
+	if(filtNum == filtN && !bypass){return false;}
 	filtN = filtNum;
 
 	let filtNx = filtN%4;
@@ -724,6 +728,19 @@ function dragElemValue(value, selParam){
 	else if(selParam == 8){polySynth.setFilterQ(max(limFQ[0],min(limFQ[1],value)));}
 	else if(selParam == 9){polySynth.setFilterGain(max(limFGain[0],min(limFGain[1],value)));}
 	else if(selParam == 10){polySynth.setFilterFreq(max(limFFreq[0],min(limFFreq[1],value)));}
+}
+function selDragElem(selDrag){
+	if(selDrag == 0){overEnv(0);}
+	else if(selDrag == 1){overEnv(1);}
+	else if(selDrag == 2){overEnv(2);}
+	else if(selDrag == 3){overEnv(3);}
+	else if(selDrag == 4){overFiltEnv(0);}
+	else if(selDrag == 5){overFiltEnv(1);}
+	else if(selDrag == 6){overFiltEnv(2);}
+	else if(selDrag == 7){overFiltEnv(3);}
+	else if(selDrag == 8){overFilterParam(0);}
+	else if(selDrag == 9){overFilterParam(1);}
+	else if(selDrag == 10){overFilterParam(2);}	
 }
 
 //aux---------------------------------------------------------------------------
