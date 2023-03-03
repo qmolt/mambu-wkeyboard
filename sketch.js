@@ -4,10 +4,10 @@ let idxScale = 8;
 let dated = true;
 
 //touches/audio
-let mouseAdded = false;
-let audioOnce = false; 
+let xyiPressed = [];
 let pTouchesId = [];
-let playing;
+let onePressId = -1;
+let dragId = -1;
 
 //wkeyboard
 let wKey; 		//ui
@@ -68,6 +68,9 @@ const limFEA = [0.1, 2.];
 const limFED = [0.1, 2.];
 const limFES = [0.1, 0.9];
 const limFER = [0.1, 2.];
+
+//MIDI--------------------------------------------------------------------------
+
 
 //------------------------------------------------------------------------------
 function k0selectPrev(){
@@ -308,57 +311,76 @@ function draw(){
 		dated = false;
 	}
 	
-	//add mouse
-	if(mouseAdded){
-		let idxT = touches.findIndex(o  => o.id == 99);
-		if(idxT<0){
-			let mouseObj = {};
-			mouseObj.x = mouseX;
-			mouseObj.y = mouseY;
-			mouseObj.winX = mouseX;
-			mouseObj.winY = mouseY;
-			mouseObj.id = 99;
-			touches.push(mouseObj);
-		}
-		else{	
-			touches[idxT].x = mouseX;
-			touches[idxT].y = mouseY;
-			touches[idxT].winX = mouseX;
-			touches[idxT].winY = mouseY;
-		}
+	//copy all touches
+	xyiPressed.splice(0, xyiPressed.length);	
+	if(mouseIsPressed){
+		let mouseObj = {};
+		mouseObj.coord = true;
+		mouseObj.x = mouseX;
+		mouseObj.y = mouseY;
+		mouseObj.id = 99;
+		xyiPressed.push(mouseObj);
 	}
-
+	for(let i=0; i<touches.length; i++){
+		let touchObj = {};
+		touchObj.coord = true;
+		touchObj.x = touches[i].x;
+		touchObj.y = touches[i].y;
+		touchObj.id = touches[i].id;
+		xyiPressed.push(touchObj)
+	}
+	//for(let i=0; i<; i++){ //add midi notes
+		//let midiObj = {};
+		//midiObj.coord = false;
+		//midiObj.id = -1;
+	//}
+	
 	//stopped touches
 	let touchesId = [];
-	for(let i=0; i<touches.length; i++){touchesId.push(touches[i].id);}
+	for(let i=0; i<xyiPressed.length; i++){touchesId.push(xyiPressed[i].id);}
 	let missingTouches = pTouchesId.filter(o => touchesId.indexOf(o)<0);
 	for(let i=0; i<missingTouches.length; i++){
 		polySynth.releaseVoice(missingTouches[i]);
+		onePressId = -1;
+		dragId = -1;
 	}
 	pTouchesId.splice(0, pTouchesId.length);
 
 	//touches
-	for(let i=0; i<touches.length; i++){
-		let note_pressed, key_pressed, pX, pY;
+	for(let i=0; i<xyiPressed.length; i++){
+		let note_pressed, key_pressed, pX, pY, pId;
 		let idxS, freq;
 
-		if(ori==='landscape'){
-			pX = touches[i].x; 
-			pY = touches[i].y;
+		if(ori === 'landscape'){pX = xyiPressed[i].x; pY = xyiPressed[i].y;}
+		else{pX = xyiPressed[i].y; pY = bb - xyiPressed[i].x;}
+		pId = xyiPressed[i].id;
+
+		//menu
+		if(pId != onePressId || onePressId < 0){
+			if(onePressEvent(pX, pY)){
+				onePressId = pId;
+				continue;
+			}	
 		}
-		else{
-			pX = touches[i].y;
-			pY = bb - touches[i].x;
+
+		//drag elem
+		if(pId == dragId || dragId < 0){
+			if(dragEvent(pX, pY)){
+				dragId = pId;
+				continue;
+			}
 		}
+
+		//pressed keys
 		key_pressed = wKey.overKeyboard(pX, pY);
 		if(key_pressed != null){
 			note_pressed = wKey.keyToNote(key_pressed);
 			freq = fl_mtof(wKey.oct_div, note_pressed);
 			//sound
-			idxS = polySynth.voiceIdx(touches[i].id);
+			idxS = polySynth.voiceIdx(pId);
 			if(idxS < 0){
-				if(polySynth.attackVoice(touches[i].id, freq)){
-					idxS = polySynth.voiceIdx(touches[i].id);
+				if(polySynth.attackVoice(pId, freq)){
+					idxS = polySynth.voiceIdx(pId);
 					pTouchesId.push(polySynth.poly[idxS].id);
 					//draw
 					wKey.drawPressedNote(key_pressed);
@@ -381,7 +403,6 @@ function draw(){
 }
 
 function drawMenu(){
-
 	push();
 	rotate(ori_angle);
 	noStroke();
@@ -422,80 +443,73 @@ function playState(){
 	Tone.Transport.loop = false;
 	Tone.Transport.start();
 }
-//function touchStarted(){
-	//prevent dflt
-//	return false;
-//}
+
+function touchStarted(){}
+function touchMoved(){}
+function touchEnded(){}
+
 function mousePressed(){
 	let mX, mY;
 	if(ori==='landscape'){mX = mouseX; mY = mouseY;}
 	else{mX = mouseY; mY = bb - mouseX;}
+	
+	onePressEvent(mX, mY);
+}
+function mouseReleased(){}
 
-	if(mY < xyFs[3]+bb*0.025){
-		if(mX > xyFs[0] && mX < xyFs[0]+xyFs[2] && mY > xyFs[1] && mY < xyFs[1]+xyFs[3]){fullscreenEvent();}
-		else if(mX > xySeld[0] && mX < xySeld[0]+xySeld[2] && mY > xySeld[1] && mY < xySeld[1]+xySeld[3]){k0selectPrev();}
-		else if(mX > xySelu[0] && mX < xySelu[0]+xySelu[2] && mY > xySelu[1] && mY < xySelu[1]+xySelu[3]){k0selectNext();}
-		else if(mX > xyOctd[0] && mX < xyOctd[0]+xyOctd[2] && mY > xyOctd[1] && mY < xyOctd[1]+xyOctu[3]){k0OctDown();}
-		else if(mX > xyOctu[0] && mX < xyOctu[0]+xyOctu[2] && mY > xyOctu[1] && mY < xyOctu[1]+xyOctu[3]){k0OctUp();}
-		else if(mX > xyTrnd[0] && mX < xyTrnd[0]+xyTrnd[2] && mY > xyTrnd[1] && mY < xyTrnd[1]+xyTrnd[3]){k0TrnDown();}
-		else if(mX > xyTrnu[0] && mX < xyTrnu[0]+xyTrnu[2] && mY > xyTrnu[1] && mY < xyTrnu[1]+xyTrnu[3]){k0TrnUp();}
+function onePressEvent(mX, mY){
+	if(mY < xyFs[3]+bb*0.025){ //menu
+		if(mX > xyFs[0] && mX < xyFs[0]+xyFs[2] && mY > xyFs[1] && mY < xyFs[1]+xyFs[3]){fullscreenEvent(); return true;}
+		else if(mX > xySeld[0] && mX < xySeld[0]+xySeld[2] && mY > xySeld[1] && mY < xySeld[1]+xySeld[3]){k0selectPrev(); return true;}
+		else if(mX > xySelu[0] && mX < xySelu[0]+xySelu[2] && mY > xySelu[1] && mY < xySelu[1]+xySelu[3]){k0selectNext(); return true;}
+		else if(mX > xyOctd[0] && mX < xyOctd[0]+xyOctd[2] && mY > xyOctd[1] && mY < xyOctd[1]+xyOctu[3]){k0OctDown(); return true;}
+		else if(mX > xyOctu[0] && mX < xyOctu[0]+xyOctu[2] && mY > xyOctu[1] && mY < xyOctu[1]+xyOctu[3]){k0OctUp(); return true;}
+		else if(mX > xyTrnd[0] && mX < xyTrnd[0]+xyTrnd[2] && mY > xyTrnd[1] && mY < xyTrnd[1]+xyTrnd[3]){k0TrnDown(); return true;}
+		else if(mX > xyTrnu[0] && mX < xyTrnu[0]+xyTrnu[2] && mY > xyTrnu[1] && mY < xyTrnu[1]+xyTrnu[3]){k0TrnUp(); return true;}
 	}
-	else if(mY < 0.45*bb && mX > 0.47*aa){
+	else if(mY < 0.45*bb && mX > 0.47*aa){ //synth params
 		if(mX > xyOsc[0]+0.1666*xyOsc[2] && mX < xyOsc[0]+0.8333*xyOsc[2] && 
 			mY > xyOsc[1]+0.0555*xyOsc[3] && mY < xyOsc[1]+0.9444*xyOsc[3]){
 			let oscNum = Math.trunc((mY-xyOsc[1]-0.0555*xyOsc[3])/(0.2222*xyOsc[3]));
 			overOsc(oscNum);
-			return;
+			return true;
 		}
 		
-		if(mX > xyEnv[0]+0.0556*xyEnv[2] && mX < xyEnv[0]+0.2777*xyEnv[2] && 
-			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(0); return;}
+		else if(mX > xyEnv[0]+0.0556*xyEnv[2] && mX < xyEnv[0]+0.2777*xyEnv[2] && 
+			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(0); return true;}
 		else if(mX > xyEnv[0]+0.2778*xyEnv[2] && mX < xyEnv[0]+0.4259*xyEnv[2] && 
-			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(1); return;}
+			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(1); return true;}
 		else if(mX > xyEnv[0]+0.4259*xyEnv[2] && mX < xyEnv[0]+0.7222*xyEnv[2] &&
-			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(2); return;}
+			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(2); return true;}
 		else if(mX > xyEnv[0]+0.7222*xyEnv[2] && mX < xyEnv[0]+0.9444*xyEnv[2] && 
-			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(3); return;}
+			mY > (xyEnv[1]+0.1*xyEnv[3]) && mY < xyEnv[1]+0.9*xyEnv[3]){overEnv(3); return true;}
 		
-		if(mX > xyFiltEnv[0]+0.0556*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.2777*xyFiltEnv[2] &&
-			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(0); return;}
+		else if(mX > xyFiltEnv[0]+0.0556*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.2777*xyFiltEnv[2] &&
+			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(0); return true;}
 		else if(mX > xyFiltEnv[0]+0.2778*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.4259*xyFiltEnv[2] &&
-			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(1); return;}
+			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(1); return true;}
 		else if(mX > xyFiltEnv[0]+0.4259*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.7222*xyFiltEnv[2] &&
-			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(2); return;}
+			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(2); return true;}
 		else if(mX > xyFiltEnv[0]+0.7222*xyFiltEnv[2] && mX < xyFiltEnv[0]+0.9444*xyFiltEnv[2] && 
-			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(3); return;}
+			mY > (xyFiltEnv[1]+0.1*xyFiltEnv[3]) && mY < xyFiltEnv[1]+0.9*xyFiltEnv[3]){overFiltEnv(3); return true;}
 
-		if(mX > xyFilt[0]+0.1111*xyFilt[2] && mX < xyFilt[0]+0.3333*xyFilt[2] &&
-			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(0); return;}
+		else if(mX > xyFilt[0]+0.1111*xyFilt[2] && mX < xyFilt[0]+0.3333*xyFilt[2] &&
+			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(0); return true;}
 		else if(mX > xyFilt[0]+0.3888*xyFilt[2] && mX < xyFilt[0]+0.6111*xyFilt[2] &&
-			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(1); return;}
+			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(1); return true;}
 		else if(mX > xyFilt[0]+0.6666*xyFilt[2] && mX < xyFilt[0]+0.8888*xyFilt[2] &&
-			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(2); return;}		
+			mY > (xyFilt[1]+0.6*xyFilt[3]) && mY < xyFilt[1]+0.9*xyFilt[3]){overFilterParam(2); return true;}		
 
-		if(mX > xyFilt[0]+0.0555*xyFilt[2] && mX < xyFilt[0]+0.9444*xyFilt[2] && 
+		else if(mX > xyFilt[0]+0.0555*xyFilt[2] && mX < xyFilt[0]+0.9444*xyFilt[2] && 
 			mY > xyFilt[1]+0.1*xyFilt[3] && mY < xyFilt[1]+0.5*xyFilt[3]){
 			let filtNumX = Math.trunc((mX-xyFilt[0]-0.0555*xyFilt[2])/(0.2222*xyFilt[2]));
 			let filtNumY = Math.trunc((mY-xyFilt[1]-0.1*xyFilt[3])/(0.2*xyFilt[3]));
 			let filtNum = filtNumX+filtNumY*4;
 			overFilterType(filtNum);
-			return;
+			return true;
 		}
 	}
-	else if(mY < 0.45*bb && mX < 0.47*aa){
-		if(mX > dXY[0]-0.05*bb && mX < dXY[2]+0.05*bb && mY > dXY[1]-0.05*bb && mY < dXY[1]+0.05*bb){
-			let elemValue = map(mX, dXY[0], dXY[2], dMin, dMax, true);
-			dVal = elemValue;
-			dragElemValue(elemValue, dragSel);
-			dated = true;
-		}
-	}
-	else{mouseAdded = true;}
-}
-function mouseReleased(){
-	mouseAdded = false;
-	let idxT = touches.findIndex(o  => o.id === 99);
-	touches.splice(idxT, 1);
+	return false;
 }
 
 function overOsc(oscNum, bypass = false){ //1:3 	
@@ -712,6 +726,21 @@ function overFilterParam(filtParam){ //9:5
 
 		dated = true;	
 		return true;
+	}
+	return false;
+}
+
+function dragEvent(mX, mY){
+	if(mY < 0.45*bb && mX < 0.47*aa){
+		if(mX > dXY[0]-0.05*bb && mX < dXY[2]+0.05*bb && 
+			mY > dXY[1]-0.05*bb && mY < dXY[1]+0.05*bb){
+			let elemValue = map(mX, dXY[0], dXY[2], dMin, dMax, true);
+			dVal = elemValue;
+			dragElemValue(elemValue, dragSel);
+			dated = true;
+
+			return true;
+		}
 	}
 	return false;
 }
