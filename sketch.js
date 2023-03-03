@@ -356,7 +356,7 @@ function draw(){
 		pId = xyiPressed[i].id;
 
 		//menu
-		if(pId != onePressId || onePressId < 0){
+		if(onePressId < 0){
 			if(onePressEvent(pX, pY)){
 				onePressId = pId;
 				continue;
