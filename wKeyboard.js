@@ -193,4 +193,7 @@ class wKeyboard {
 	keyToNote(keyPressed) {
 		return keyPressed + this.oct_div * (5 - this.c4oct);
 	}
+	noteToKey(note){
+		return note - this.oct_div * (5 - this.c4oct);
+	}
 }

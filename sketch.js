@@ -3,6 +3,22 @@ let scales;
 let idxScale = 8;
 let dated = true;
 
+//midi
+let midi = null;
+let midiState = 0;
+let mInputs = [];
+let mOutputs = [];
+let mInId = '';
+let mInLabel = '';
+let mInSel = -1;
+let mOutId = '';
+let mOutLabel = '';
+let mOutSel = -1;
+let accumOffset;
+let mInPG;
+let mOutPG;
+let midiPlaying = [];
+
 //touches/audio
 let xyiPressed = [];
 let pTouchesId = [];
@@ -42,6 +58,9 @@ let xyOctd = [0, 0, 0, 0];
 let xyOctu = [0, 0, 0, 0];
 let xyTrnd = [0, 0, 0, 0];
 let xyTrnu = [0, 0, 0, 0];
+let xyMidiI = [0, 0, 0, 0];
+let xyMidiO = [0, 0, 0, 0];
+let xyMidiL = [0, 0, 0, 0];
 
 let xyOsc = [0, 0, 0, 0];
 let xyEnv = [0, 0, 0, 0];
@@ -70,7 +89,105 @@ const limFES = [0.1, 0.9];
 const limFER = [0.1, 2.];
 
 //MIDI--------------------------------------------------------------------------
+navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
 
+function onMIDISuccess(midiAccess) {
+	midi = midiAccess;
+
+	//connection changes
+	midi.onstatechange = onMIDIConnectChange;
+
+	//copy io info
+	updateIOMIDI();
+}
+function onMIDIFailure(msg) {
+	midiState = -1;
+}
+function onMIDIConnectChange(event){
+	//console.log(event.port.name, event.port.state);	//event.port.manufacturer
+	updateIOMIDI();
+	setMidiIn();
+	//setMidiOut();
+	mInSel = -1;
+	mOutSel = -1;
+	dated = true;
+}
+
+function parseMidiMessage(message) {
+	return {
+		command: message.data[0] >> 4,
+		channel: message.data[0] & 0xf,
+		note: message.data[1],
+		velocity: message.data[2] / 127
+	}
+}
+function onMIDIMessage(event){
+	const{command, channel, note, velocity} = parseMidiMessage(event)
+
+	if(command === 8){
+		polySynth.releaseVoice(-note);
+
+		let key = wKey.noteToKey(note);
+		let found = midiPlaying.indexOf(key);
+		if(found >= 0){midiPlaying.splice(found, 1);}
+
+		dated = true;
+	}
+	else if(command === 9){
+		let freq = fl_mtof(wKey.oct_div, note);
+		polySynth.attackVoice(-note, freq);//, velocity);
+		
+		let key = wKey.noteToKey(note);
+		midiPlaying.push(key);
+		midiState = 1;
+
+		dated = true;
+	}
+}
+function nonSelectedMIDI(event){}
+function updateIOMIDI(){
+	mInputs.splice(0, mInputs.length);
+	mOutputs.splice(0, mOutputs.length);
+	let it = midi.inputs.values();
+	for(let o=it.next(); !o.done; o=it.next()){mInputs.push(o.value);}
+	it = midi.outputs.values();
+	for(let o=it.next(); !o.done; o=it.next()){mOutputs.push(o.value);}	
+		//mInputs[i].type, mInputs[i].id, mInputs[i].manufacturer, mInputs[i].name, mInputs[i].version		
+}
+
+function setMidiIn(){
+	let nIn = mInputs.length;
+	if(nIn > 0){
+		mInSel = (mInSel+1)%nIn;
+		mInLabel = mInputs[mInSel].name;
+		mInId = mInputs[mInSel].id;
+	}
+	else{
+		mInSel = -1;
+		mInLabel = '-none-';
+		mInId = '';
+	}
+
+	//midi input data
+	midi.inputs.forEach((entry) => {
+		if(mInSel >= 0){
+			if(entry.id === mInputs[mInSel].id){entry.onmidimessage = onMIDIMessage;}
+			else{entry.onmidimessage = nonSelectedMIDI;}
+		}
+	});
+
+	//menu text
+	mInPG.clear();
+	mInPG.noStroke();
+	//mInPG.rect(0, 0, mInPG.width, mInPG.height);
+	mInPG.textAlign(LEFT, CENTER);
+	mInPG.textSize(10);
+	mInPG.text(`[${mInLabel}] [${mInLabel}] [${mInLabel}] [${mInLabel}] `, 0, 10);
+	accumOffset = -20;
+
+	dated = true;
+}
+function setMidiOut(){}
 
 //------------------------------------------------------------------------------
 function k0selectPrev(){
@@ -137,17 +254,21 @@ function orientationCorrection(){
 	}
 }
 function setXYArrays(){
-	xyFs[0] = 0.0125*bb; xyFs[1] = 0.0125*bb; xyFs[2] = 0.05*bb; xyFs[3] = 0.05*bb;
+	xyFs[0] = 0.01*aa; xyFs[1] = 0.0125*bb; xyFs[2] = 0.05*bb; xyFs[3] = 0.05*bb;
 	
-	xySeld[0] = 0.2*bb; xySeld[1] = 0.0125*bb; xySeld[2] = 0.05*bb; xySeld[3] = 0.05*bb;
-	xySelc[0] = 0.25*bb; xySelc[1] = 0.0125*bb; xySelc[2] = 0.075*bb; xySelc[3] = 0.05*bb;
-	xySelu[0] = 0.325*bb; xySelu[1] = 0.0125*bb; xySelu[2] = 0.05*bb; xySelu[3] = 0.05*bb;
+	xySeld[0] = 0.15*aa-0.06*bb; xySeld[1] = 0.0125*bb; xySeld[2] = 0.05*bb; xySeld[3] = 0.05*bb;
+	xySelc[0] = 0.15*aa; xySelc[1] = 0.02*bb; xySelc[2] = 0.075*bb; xySelc[3] = 0.04*bb;
+	xySelu[0] = 0.15*aa+0.085*bb; xySelu[1] = 0.0125*bb; xySelu[2] = 0.05*bb; xySelu[3] = 0.05*bb;
 	
-	xyOctd[0] = 0.5*bb; xyOctd[1] = 0.0125*bb; xyOctd[2] = 0.05*bb; xyOctd[3] = 0.05*bb;
-	xyOctu[0] = 0.57*bb; xyOctu[1] = 0.0125*bb; xyOctu[2] = 0.05*bb; xyOctu[3] = 0.05*bb;
+	xyOctd[0] = 0.3*aa; xyOctd[1] = 0.0125*bb; xyOctd[2] = 0.05*bb; xyOctd[3] = 0.05*bb;
+	xyOctu[0] = 0.3*aa+0.07*bb; xyOctu[1] = 0.0125*bb; xyOctu[2] = 0.05*bb; xyOctu[3] = 0.05*bb;
 	
-	xyTrnd[0] = 0.75*bb; xyTrnd[1] = 0.0125*bb; xyTrnd[2] = 0.05*bb; xyTrnd[3] = 0.05*bb;
-	xyTrnu[0] = 0.82*bb; xyTrnu[1] = 0.0125*bb; xyTrnu[2] = 0.05*bb; xyTrnu[3] = 0.05*bb;
+	xyTrnd[0] = 0.45*aa; xyTrnd[1] = 0.0125*bb; xyTrnd[2] = 0.05*bb; xyTrnd[3] = 0.05*bb;
+	xyTrnu[0] = 0.45*aa+0.07*bb; xyTrnu[1] = 0.0125*bb; xyTrnu[2] = 0.05*bb; xyTrnu[3] = 0.05*bb;
+
+	xyMidiI[0] = 0.7*aa; xyMidiI[1] = 0.02*bb; xyMidiI[2] = 0.15*bb; xyMidiI[3] = 0.04*bb;
+	xyMidiO[0] = 0.7*aa+0.16*bb; xyMidiO[1] = 0.02*bb; xyMidiO[2] = 0.15*bb; xyMidiO[3] = 0.04*bb;
+	xyMidiL[0] = 0.7*aa-0.06*bb; xyMidiL[1] = 0.0125*bb; xyMidiL[2] = 0.05*bb; xyMidiL[3] = 0.05*bb;
 
 	xyOsc[0] = 0.48*aa; xyOsc[1] = 0.125*bb; xyOsc[2] = 0.1*bb; xyOsc[3] = 0.3*bb;
 	xyEnv[0] = 0.57*aa; xyEnv[1] = 0.275*bb; xyEnv[2] = 0.27*bb; xyEnv[3] = 0.15*bb;
@@ -212,6 +333,10 @@ function setup(){
 	cnv0.mousePressed(playState);
 	cnv0.touchStarted(playState);
 
+	mInPG = createGraphics(200, 20);
+	//mOutPG = createGraphics(200, 20);
+	accumOffset = -20;
+
 	if(windowWidth>windowHeight){
 		ori = 'landscape';
 		aa = width;
@@ -231,6 +356,7 @@ function setup(){
 	overOsc(0);
 	overFilterType(0);
 	selDragElem(0);
+	setMidiIn();
 	
 	//
 	imageMode(CORNER);
@@ -329,12 +455,21 @@ function draw(){
 		touchObj.id = touches[i].id;
 		xyiPressed.push(touchObj)
 	}
-	//for(let i=0; i<; i++){ //add midi notes
-		//let midiObj = {};
-		//midiObj.coord = false;
-		//midiObj.id = -1;
-	//}
-	
+
+	//midi buttons
+	push();
+	rotate(ori_angle);
+	//draw menu midi text
+	let mIOOffset = max(0, min(mInPG.width-xyMidiI[2], accumOffset));
+	fill(220);
+	rect(xyMidiI[0], xyMidiI[1], xyMidiI[2], xyMidiI[3]);
+	image(mInPG, xyMidiI[0], xyMidiI[1], xyMidiI[2], xyMidiI[3], mIOOffset, 0, mInPG.width, mInPG.height, COVER, LEFT, CENTER);
+	//rect(xyMidiO[0], xyMidiO[1], xyMidiO[2], xyMidiO[3]);
+	//img moutpg
+	accumOffset+=0.2;
+	if(accumOffset > mInPG.width){accumOffset = -20;}
+	pop();
+
 	//stopped touches
 	let touchesId = [];
 	for(let i=0; i<xyiPressed.length; i++){touchesId.push(xyiPressed[i].id);}
@@ -398,6 +533,21 @@ function draw(){
 		}
 	}
 
+	//midi notes
+	for(let i=0; i<midiPlaying.length; i++){wKey.drawPressedNote(midiPlaying[i]);}
+	
+	//midi state
+	if(midiState < 0){fill(220, 0, 0);}
+	else{
+		if(midiPlaying.length == 0){fill(220, 220, 220);}
+		else{fill(0, 220, 0);}
+	}
+	push();
+	rotate(ori_angle);
+	noStroke();
+	ellipse(xyMidiL[0]+0.5*xyMidiL[2], xyMidiL[1]+0.75*xyMidiL[3], 0.4*xyMidiL[2], 0.4*xyMidiL[3]);
+	pop();
+
 	//volume
 	polySynth.autoVolume();	
 }
@@ -412,29 +562,33 @@ function drawMenu(){
 		
 	fill(210);
  	rect(xyFs[0], xyFs[1], xyFs[2], xyFs[3]);
-	rect(xySelc[0], xySelc[1], xySelc[2], xySelc[3]);
+	rect(xySeld[0], xySeld[1], xySeld[2], xySeld[3]);
+	rect(xySelu[0], xySelu[1], xySelu[2], xySelu[3]);
 	rect(xyOctd[0], xyOctd[1], xyOctd[2], xyOctd[3]);
 	rect(xyOctu[0], xyOctu[1], xyOctu[2], xyOctu[3]);
 	rect(xyTrnd[0], xyTrnd[1], xyTrnd[2], xyTrnd[3]);
 	rect(xyTrnu[0], xyTrnu[1], xyTrnu[2], xyTrnu[3]);
-
+	
 	textAlign(CENTER, CENTER);
-	textSize(0.02*bb);
+	textSize(0.025*bb);
 	noStroke();
 	fill(40);
 	textFont('Helvetica');
 
 	text('□', xyFs[0], xyFs[1], xyFs[2], xyFs[3]);
-	text(`${scales[idxScale].oct_div} | ${scales[idxScale].struc.length}`, 
-		xySelc[0], xySelc[1], xySelc[2], xySelc[3]);
 	text('-', xyOctd[0], xyOctd[1], xyOctd[2], xyOctu[3]);
 	text('+', xyOctu[0], xyOctu[1], xyOctu[2], xyOctu[3]);
 	text('←', xyTrnd[0], xyTrnd[1], xyTrnd[2], xyTrnd[3]);
 	text('→', xyTrnu[0], xyTrnu[1], xyTrnu[2], xyTrnu[3]);
-
-	fill(210);
 	text('<', xySeld[0], xySeld[1], xySeld[2], xySeld[3]);
 	text('>', xySelu[0], xySelu[1], xySelu[2], xySelu[3]);
+
+	fill(210);
+	textSize(0.023*bb);
+	text(`${scales[idxScale].oct_div} | ${scales[idxScale].struc.length}`, xySelc[0], xySelc[1], xySelc[2], xySelc[3]);
+	textSize(0.015*bb);
+	text('MIDI', xyMidiL[0], xyMidiL[1], xyMidiL[2], 0.5*xyMidiL[3]);
+
 	pop();
 }
 
@@ -466,6 +620,9 @@ function onePressEvent(mX, mY){
 		else if(mX > xyOctu[0] && mX < xyOctu[0]+xyOctu[2] && mY > xyOctu[1] && mY < xyOctu[1]+xyOctu[3]){k0OctUp(); return true;}
 		else if(mX > xyTrnd[0] && mX < xyTrnd[0]+xyTrnd[2] && mY > xyTrnd[1] && mY < xyTrnd[1]+xyTrnd[3]){k0TrnDown(); return true;}
 		else if(mX > xyTrnu[0] && mX < xyTrnu[0]+xyTrnu[2] && mY > xyTrnu[1] && mY < xyTrnu[1]+xyTrnu[3]){k0TrnUp(); return true;}
+
+		else if(mX > xyMidiI[0] && mX < xyMidiI[0]+xyMidiI[2] && mY > xyMidiI[1] && mY < xyMidiI[1]+xyMidiI[3]){setMidiIn(); return true;}
+		//else if(mX > xyMidiO[0] && mX < xyMidiO[0]+xyMidiO[2] && mY > xyMidiO[1] && mY < xyMidiO[1]+xyMidiO[3]){setMidiOut(); return true;}
 	}
 	else if(mY < 0.45*bb && mX > 0.47*aa){ //synth params
 		if(mX > xyOsc[0]+0.1666*xyOsc[2] && mX < xyOsc[0]+0.8333*xyOsc[2] && 
