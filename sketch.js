@@ -169,13 +169,14 @@ function setMidiIn(){
 	}
 
 	//midi input data
-	midi.inputs.forEach((entry) => {
-		if(mInSel >= 0){
-			if(entry.id === mInputs[mInSel].id){entry.onmidimessage = onMIDIMessage;}
-			else{entry.onmidimessage = nonSelectedMIDI;}
-		}
-	});
-
+	if(midi!=null){
+		midi.inputs.forEach((entry) => {
+			if(mInSel >= 0){
+				if(entry.id === mInputs[mInSel].id){entry.onmidimessage = onMIDIMessage;}
+				else{entry.onmidimessage = nonSelectedMIDI;}
+			}
+		});
+	}
 	//menu text
 	mInPG.clear();
 	mInPG.noStroke();
