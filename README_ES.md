@@ -1,4 +1,10 @@
-[Readme in english](https://github.com/qumolt/mambu-wkeyboard/blob/master/README.md)
+['Readme' in english](https://github.com/qumolt/mambu-wkeyboard/blob/master/README.md)
+
+
+||
+|:--:|
+|[🎹🎹  **>> Play here <<** 🎹🎹](https://qumolt.github.io/mambu-wkeyboard/)|
+
 
 <img src="assets/mambu_icon.png" width="400">
 
