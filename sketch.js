@@ -79,14 +79,14 @@ let dMax = '';
 const limFQ = [0.1, 2.0];
 const limFFreq = [-3, 3];
 const limFGain = [-100.0, 0.0];
-const limEA = [0.1, 2.];
-const limED = [0.1, 2.];
+const limEA = [0.1, 5.];
+const limED = [0.1, 5.];
 const limES = [0.1, 0.9];
-const limER = [0.1, 2.];
-const limFEA = [0.1, 2.];
-const limFED = [0.1, 2.];
+const limER = [0.1, 5.];
+const limFEA = [0.1, 5.];
+const limFED = [0.1, 5.];
 const limFES = [0.1, 0.9];
-const limFER = [0.1, 2.];
+const limFER = [0.1, 5.];
 
 //MIDI--------------------------------------------------------------------------
 navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
@@ -696,7 +696,7 @@ function overEnv(envNum){ //9:5
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
 		dragSel = 0;
-		dLabel = 'Attack (Amplitude)';
+		dLabel = 'Amplitude Envelope: Attack [sec]';
 		dMin = limEA[0];
 		dMax = limEA[1];
 		dVal = polySynth.getEnvA(0);
@@ -711,7 +711,7 @@ function overEnv(envNum){ //9:5
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
 		dragSel = 1;
-		dLabel = 'Decay (Amplitude)';
+		dLabel = 'Amplitude Envelope: Decay [sec]';
 		dMin = limED[0];
 		dMax = limED[1];
 		dVal = polySynth.getEnvD(0);
@@ -726,7 +726,7 @@ function overEnv(envNum){ //9:5
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
 		dragSel = 2;
-		dLabel = 'Sustain (Amplitude)';
+		dLabel = 'Amplitude Envelope: Sustain [100%]';
 		dMin = limES[0];
 		dMax = limES[1];
 		dVal = polySynth.getEnvS(0);
@@ -741,7 +741,7 @@ function overEnv(envNum){ //9:5
 		xySelDrag[3] = 0.8*xyEnv[3]; 				//(24/30)*xyEnv[3]
 
 		dragSel = 3;
-		dLabel = 'Release (Amplitude)';
+		dLabel = 'Amplitude Envelope: Release [sec]';
 		dMin = limER[0];
 		dMax = limER[1];
 		dVal = polySynth.getEnvR(0);
@@ -760,7 +760,7 @@ function overFiltEnv(filtEnvNum){ //9:5
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
 		dragSel = 4;
-		dLabel = 'Attack (Frequency)';
+		dLabel = 'Frequency Envelope: Attack [sec]';
 		dMin = limFEA[0];
 		dMax = limFEA[1];
 		dVal = polySynth.getFiltEnvA(0);
@@ -775,7 +775,7 @@ function overFiltEnv(filtEnvNum){ //9:5
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
 		dragSel = 5;
-		dLabel = 'Decay (Frequency)';
+		dLabel = 'Frequency Envelope: Decay [sec]';
 		dMin = limFED[0];
 		dMax = limFED[1];
 		dVal = polySynth.getFiltEnvD(0);
@@ -790,7 +790,7 @@ function overFiltEnv(filtEnvNum){ //9:5
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
 		dragSel = 6;
-		dLabel = 'Sustain (Frequency)';
+		dLabel = 'Frequency Envelope: Sustain [100%]';
 		dMin = limFES[0];
 		dMax = limFES[1];
 		dVal = polySynth.getFiltEnvS(0);
@@ -805,7 +805,7 @@ function overFiltEnv(filtEnvNum){ //9:5
 		xySelDrag[3] = 0.8*xyFiltEnv[3];
 
 		dragSel = 7;
-		dLabel = 'Release (Frequency)';
+		dLabel = 'Frequency Envelope: Release [sec]';
 		dMin = limFER[0];
 		dMax = limFER[1];
 		dVal = polySynth.getFiltEnvR(0);
@@ -847,7 +847,7 @@ function overFilterParam(filtParam){ //9:5
 		xySelDrag[3] = 0.3*xyFilt[3]; 					//(3/10)*xyFilt[3]
 
 		dragSel = 8;
-		dLabel = 'Q';
+		dLabel = 'Filter: Q';
 		dMin = limFQ[0];
 		dMax = limFQ[1];
 		dVal = polySynth.getFilterQ(0);
@@ -862,7 +862,7 @@ function overFilterParam(filtParam){ //9:5
 		xySelDrag[3] = 0.3*xyFilt[3]; 						//(3/10)*xyFilt[3]
 
 		dragSel = 9;
-		dLabel = 'Gain';
+		dLabel = 'Filter: Gain';
 		dMin = limFGain[0];
 		dMax = limFGain[1];
 		dVal = polySynth.getFilterGain(0);
@@ -877,7 +877,7 @@ function overFilterParam(filtParam){ //9:5
 		xySelDrag[3] = 0.3*xyFilt[3]; 								//(3/10)*xyFilt[3]
 
 		dragSel = 10;
-		dLabel = 'Octaves Envelope';
+		dLabel = 'Frequency Envelope: Octaves';
 		dMin = limFFreq[0];
 		dMax = limFFreq[1];
 		dVal = polySynth.getFilterFreq(0);
