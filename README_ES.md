@@ -1,4 +1,4 @@
-['Readme' in english](https://github.com/qumolt/mambu-wkeyboard/blob/master/README.md)
+['README' in english](https://github.com/qumolt/mambu-wkeyboard/blob/master/README.md)
 
 
 ||
