@@ -1,9 +1,9 @@
-['LEEME' en Español](https://github.com/qumolt/mambu-wkeyboard/blob/master/README_ES.md)
+['LEEME' en Español](https://github.com/qmolt/mambu-wkeyboard/blob/master/README_ES.md)
 
 
 ||
 |:--:|
-|[🎹🎹  **>> Play here <<** 🎹🎹](https://qumolt.github.io/mambu-wkeyboard/)|
+|[🎹🎹  **>> Play here <<** 🎹🎹](https://qmolt.github.io/mambu-wkeyboard/)|
 ||
 
 

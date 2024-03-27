@@ -1,9 +1,9 @@
-['README' in english](https://github.com/qumolt/mambu-wkeyboard/blob/master/README.md)
+['README' in english](https://github.com/qmolt/mambu-wkeyboard/blob/master/README.md)
 
 
 ||
 |:--:|
-|[🎹🎹  **>> Toca aquí <<** 🎹🎹](https://qumolt.github.io/mambu-wkeyboard/)|
+|[🎹🎹  **>> Toca aquí <<** 🎹🎹](https://qmolt.github.io/mambu-wkeyboard/)|
 ||
 
 
